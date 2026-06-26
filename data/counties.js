@@ -12,13 +12,15 @@ window.SITE = {
 
 window.NATIONAL_POLICIES = [
   { id:"np-01", name:"Constitution of Kenya — Article 43(1)(a)", year:2010, status:"Adopted", impl_pct:65, category:"Constitutional", gap:"County-level implementation inconsistent", doc_url:"" },
-  { id:"np-02", name:"National Reproductive Health Policy (2022–2032)", year:2022, status:"Adopted", impl_pct:60, category:"Reproductive Health", gap:"Inadequate resource allocation; limited HCW training", doc_url:"" },
-  { id:"np-03", name:"National Family Planning Policy", year:2012, status:"Adopted", impl_pct:55, category:"Family Planning", gap:"Supply chain challenges; cultural/religious barriers", doc_url:"" },
-  { id:"np-04", name:"National ASRHR Policy", year:2015, status:"Adopted", impl_pct:38, category:"Adolescent Health", gap:"Low youth-friendly facility coverage; high teen pregnancy", doc_url:"" },
+  { id:"np-02", name:"National Reproductive Health Policy (2022–2032)", year:2022, status:"Adopted", impl_pct:60, category:"Reproductive Health", gap:"Inadequate resource allocation; limited HCW training", doc_url:"http://guidelines.health.go.ke:8000/media/The_National_Reproductive_Health_Policy_2022_-_2032.pdf" },
+  { id:"np-03", name:"National Family Planning Policy", year:2025, status:"Adopted", impl_pct:55, category:"Family Planning", gap:"Supply chain challenges; cultural/religious barriers", doc_url:"https://www.health.go.ke/sites/default/files/2026-02/Signed%20National%20Family%20Planning%20Guidelines%207th%20Edition%202025%20%281%29.pdf" },
+  { id:"np-04", name:"National ASRHR Policy", year:2015, status:"Adopted", impl_pct:38, category:"Adolescent Health", gap:"Low youth-friendly facility coverage; high teen pregnancy", doc_url:"https://tciurbanhealth.org/wp-content/uploads/2018/03/Ministry-of-Health-ASRH-POLICY-2015.pdf" },
   { id:"np-05", name:"HIV Prevention and Control Act", year:2014, status:"Adopted", impl_pct:57, category:"HIV/AIDS", gap:"Stigma; limited SRHR-HIV integration", doc_url:"" },
-  { id:"np-06", name:"National Gender and Development Policy", year:2019, status:"Partially Implemented", impl_pct:32, category:"Gender", gap:"Inadequate gender-responsive budgeting", doc_url:"" },
+  { id:"np-06", name:"National Gender and Development Policy", year:2019, status:"Partially Implemented", impl_pct:32, category:"Gender", gap:"Inadequate gender-responsive budgeting", doc_url:"https://gender.go.ke/sites/default/files/publications/NATIONAL-POLICY-ON-GENDER-ANDDEVELOPMENT.pdf" },
   { id:"np-07", name:"National Guidelines for Comprehensive Sexuality Education", year:2018, status:"Adopted", impl_pct:30, category:"Education", gap:"Inconsistent integration in schools", doc_url:"" },
-  { id:"np-08", name:"National Policy on Prevention and Response to GBV", year:2014, status:"Adopted", impl_pct:45, category:"GBV", gap:"Fragmented SGBV response systems; under-resourced", doc_url:"" }
+  { id:"np-08", name:"National Policy on Prevention and Response to GBV", year:2014, status:"Adopted", impl_pct:45, category:"GBV", gap:"Fragmented SGBV response systems; under-resourced", doc_url:"" },
+  { id:"np-09", name:"Menstrual Hygiene Management Policy (2019–2030)", year:2019, status:"Adopted", impl_pct:28, category:"Menstrual Health", gap:"County-level implementation very low", doc_url:"http://guidelines.health.go.ke:8000/media/Menstrual_Hygiene_Management_Policy_2019-2030-_May2020.pdf" },
+  { id:"np-10", name:"National School Re-entry Guidelines (2020)", year:2020, status:"Adopted", impl_pct:35, category:"Education", gap:"Inconsistent enforcement across counties", doc_url:"https://www.education.go.ke/sites/default/files/2022-05/2020RH_NationalSchoolReEntryGuidelines.pdf" }
 ];
 
 window.COUNTIES = [
@@ -40,11 +42,14 @@ window.COUNTIES = [
     sub_counties: 9, wards: 40,
     women_reproductive_age: 336792,
     policies: [
-      { id:"hb-p01", name:"Homa Bay County Reproductive Health Bill (2025)", year:2025, status:"In Progress", impl_pct:0, actors:["Ministry of Health / CHMT","Gender TWG","CSOs"], gap:"Delayed finalization", advocacy:"Lobby for enactment", doc_url:"" },
+      { id:"hb-p01", name:"Homa Bay County Reproductive Health Bill (2025)", year:2025, status:"In Progress", impl_pct:0, actors:["Ministry of Health / CHMT","Gender TWG","CSOs"], gap:"Delayed finalization", advocacy:"Lobby for enactment", doc_url:"https://drive.google.com/file/d/1felAZTq-0cPqNMvpHDit0cnWIffSFwD8/view?usp=sharing" },
       { id:"hb-p02", name:"County Reproductive Health Policy", year:2025, status:"In Progress", impl_pct:5, actors:["CHMT","CSOs"], gap:"Draft stage — limited stakeholder input", advocacy:"Accelerate stakeholder consultations", doc_url:"" },
       { id:"hb-p03", name:"County SGBV Bill", year:2025, status:"In Progress", impl_pct:0, actors:["County Assembly","CSOs","Gender Office"], gap:"Bill awaiting tabling", advocacy:"Engage county assembly members", doc_url:"" },
-      { id:"hb-p04", name:"SGBV Policy (2023)", year:2023, status:"Adopted", impl_pct:55, actors:["Gender Office","CSOs"], gap:"Enforcement weak at sub-county level", advocacy:"Strengthen enforcement mechanisms", doc_url:"" },
-      { id:"hb-p05", name:"County Health Services Act (2020)", year:2020, status:"Adopted", impl_pct:60, actors:["CDH","CHMT"], gap:"SRHR components under-resourced", advocacy:"Advocate for dedicated SRHR budget line", doc_url:"" }
+      { id:"hb-p04", name:"SGBV Policy (2023)", year:2023, status:"Adopted", impl_pct:55, actors:["Gender Office","CSOs"], gap:"Enforcement weak at sub-county level", advocacy:"Strengthen enforcement mechanisms", doc_url:"https://s3.us-east-005.backblazeb2.com/homabaycms/webadmin/downloads/files/019d5882-b4e6-71ce-bdbd-f08a88e88502-dw-nq51odce19shbdwzowpzinfp.pdf" },
+      { id:"hb-p05", name:"County Health Services Act (2020)", year:2020, status:"Adopted", impl_pct:60, actors:["CDH","CHMT"], gap:"SRHR components under-resourced", advocacy:"Advocate for dedicated SRHR budget line", doc_url:"https://s3.us-east-005.backblazeb2.com/homabaycms/webadmin/downloads/files/019d5882-9ac4-70c9-a516-1b94fa876740-dw-bn9rejjmrdl1lksoip2vjot2.pdf" },
+      { id:"hb-p06", name:"Homa Bay County HIV and AIDS Strategic Plan (2020–2025)", year:2020, status:"Adopted", impl_pct:58, actors:["CHMT","NSDCC","Development Partners"], gap:"SRHR-HIV integration weak", advocacy:"Strengthen SRHR-HIV service linkages", doc_url:"https://nsdcc.go.ke/wp-content/uploads/2021/08/homabay.pdf" },
+      { id:"hb-p07", name:"Homa Bay County Facility Improvement Financing Act (2023)", year:2023, status:"Adopted", impl_pct:45, actors:["CDH","CHMT"], gap:"SRHR facility coverage gaps", advocacy:"Leverage Act for SRHR facility upgrades", doc_url:"https://s3.us-east-005.backblazeb2.com/homabaycms/webadmin/downloads/files/210e46f8-579a4c74-8589-ff3df4c8f0f4-the-homa-bay-county-health-facility-improvement-financing-act-2023.pdf" },
+      { id:"hb-p08", name:"National School Re-entry Guidelines (2020)", year:2020, status:"Adopted", impl_pct:35, actors:["Ministry of Education","County Education Dept."], gap:"Implementation inconsistent at county level", advocacy:"Enforce re-entry policy for teen mothers", doc_url:"https://www.education.go.ke/sites/default/files/2022-05/2020RH_NationalSchoolReEntryGuidelines.pdf" }
     ],
     advocacy_issues: [
       { id:"hb-a01", problem:"Lack of dedicated County SRHR policy framework", priority:1, timeline:"2 Years", lead_org:"GVRC", member_orgs:["KELIN","NAYA","HOCEN","World Vision"], status:"Not Started", indicator:"Number of Bills and Policies enacted" },
@@ -93,9 +98,10 @@ window.COUNTIES = [
       { id:"mg-p01", name:"GBV Policy (2026 Draft)", year:2026, status:"Draft", impl_pct:0, actors:["Gender Office","CSOs"], gap:"Awaiting approval", advocacy:"Push for County Executive approval", doc_url:"" },
       { id:"mg-p02", name:"SGBV Policy (2019)", year:2019, status:"Adopted", impl_pct:50, actors:["Gender Office","Police","CSOs"], gap:"Limited enforcement; low awareness", advocacy:"Strengthen enforcement & reporting", doc_url:"" },
       { id:"mg-p03", name:"Gender Policy (2021–2025)", year:2021, status:"Adopted", impl_pct:55, actors:["County Gender Office"], gap:"Budget allocation insufficient", advocacy:"Advocate for increased allocation", doc_url:"" },
-      { id:"mg-p04", name:"County HIV Strategic Plan", year:2020, status:"Adopted", impl_pct:60, actors:["CHMT","Development Partners"], gap:"SRHR linkages weak", advocacy:"Integrate SRHR-HIV services", doc_url:"" },
+      { id:"mg-p04", name:"County HIV Strategic Plan", year:2020, status:"Adopted", impl_pct:60, actors:["CHMT","Development Partners"], gap:"SRHR linkages weak", advocacy:"Integrate SRHR-HIV services", doc_url:"https://nsdcc.go.ke/wp-content/uploads/2021/08/migori.pdf" },
       { id:"mg-p05", name:"CIDP SRHR Components (2023–2027)", year:2023, status:"Adopted", impl_pct:40, actors:["County Government"], gap:"Implementation lagging", advocacy:"Quarterly monitoring reviews", doc_url:"" },
-      { id:"mg-p06", name:"Reproductive Health Bill", year:2025, status:"Stalled", impl_pct:0, actors:["County Assembly","CSOs"], gap:"Political barriers; limited lobbying", advocacy:"Intensify legislator engagement", doc_url:"" }
+      { id:"mg-p06", name:"Reproductive Health Bill", year:2025, status:"Stalled", impl_pct:0, actors:["County Assembly","CSOs"], gap:"Political barriers; limited lobbying", advocacy:"Intensify legislator engagement", doc_url:"" },
+      { id:"mg-p07", name:"Migori County Community Health Services Act (2022)", year:2022, status:"Adopted", impl_pct:45, actors:["CDH","CHMT","Community Health Volunteers"], gap:"Limited integration of SRHR in community health", advocacy:"Integrate SRHR in community health unit frameworks", doc_url:"https://migoriassembly.go.ke/wp-content/uploads/2024/10/The-Migori-County-Community-HealthServices-Act-2022.pdf" }
     ],
     advocacy_issues: [
       { id:"mg-a01", problem:"Stalled Reproductive Health Bill", priority:1, timeline:"1 Year", lead_org:"KELIN", member_orgs:["FIDA Kenya","NAYA","Youth for a Sustainable World"], status:"In Progress", indicator:"RH Bill passed by County Assembly" },
@@ -141,9 +147,13 @@ window.COUNTIES = [
     sub_counties: 7, wards: 35,
     women_reproductive_age: 358000,
     policies: [
-      { id:"kf-p01", name:"Kilifi County RMNCAH Act (2025)", year:2025, status:"Enacted", impl_pct:33, actors:["CDH","CHMT","CSOs"], gap:"Low implementation; funding shortfall", advocacy:"Develop county implementation plan with budget", doc_url:"" },
-      { id:"kf-p02", name:"County SGBV Policy (2020)", year:2020, status:"Not Operational", impl_pct:0, actors:["County Executive","Gender Office"], gap:"Awaiting Governor's signature", advocacy:"Lobby Governor's office to sign immediately", doc_url:"" },
-      { id:"kf-p03", name:"Menstrual Health Management (MHM) Policy", year:2024, status:"Draft", impl_pct:0, actors:["CDH","Education Dept.","CSOs"], gap:"Not yet adopted", advocacy:"Fast-track adoption process", doc_url:"" }
+      { id:"kf-p01", name:"Kilifi County RMNCAH Act (2025)", year:2025, status:"Enacted", impl_pct:33, actors:["CDH","CHMT","CSOs"], gap:"Low implementation; funding shortfall", advocacy:"Develop county implementation plan with budget", doc_url:"https://slo-countybills.go.ke/api/v1/bill/pdf/B1KNHP7XG1_8_KILIFI%20COUNTY%20REPRODUCTIVE,MATERNAL,%20ADOLESCENT%20AND%20CHILD%20HEALTH%20BILL%202024.pdf" },
+      { id:"kf-p02", name:"County SGBV Policy (2020)", year:2020, status:"Not Operational", impl_pct:0, actors:["County Executive","Gender Office"], gap:"Awaiting Governor's signature", advocacy:"Lobby Governor's office to sign immediately", doc_url:"https://fliphtml5.com/hbwww/vray/Kilifi_County_GBV_Policy_-_Draft_1.5/15/" },
+      { id:"kf-p03", name:"Menstrual Health Management (MHM) Policy", year:2024, status:"Draft", impl_pct:0, actors:["CDH","Education Dept.","CSOs"], gap:"Not yet adopted", advocacy:"Fast-track adoption process", doc_url:"" },
+      { id:"kf-p04", name:"Kilifi County SGBV Bill (2023)", year:2023, status:"In Progress", impl_pct:10, actors:["County Assembly","CSOs","Gender Office"], gap:"Bill awaiting enactment", advocacy:"Lobby County Assembly for passage", doc_url:"https://slo-countybills.go.ke/api/v1/bill/pdf/8BZTY32RAX_3_KIlifi%20County%20Gender%20Based%20Violance%20Bill,%202023.pdf" },
+      { id:"kf-p05", name:"Kilifi County CIDP — SRHR Components (2023–2027)", year:2023, status:"Adopted", impl_pct:40, actors:["County Government"], gap:"SRHR components underfunded", advocacy:"Ensure SRHR budget lines are ring-fenced", doc_url:"https://assets.countydevelopmentplan.com/cidp/pdfs/280d3e55-e43f-4db3-b028-8e4637440be4-KILIFI-COUNTY-CIDP-III_30.05.2023.pdf" },
+      { id:"kf-p06", name:"National School Re-entry Guidelines (2020)", year:2020, status:"Adopted", impl_pct:35, actors:["Ministry of Education","County Education Dept."], gap:"Inconsistent enforcement", advocacy:"County-level enforcement policy needed", doc_url:"https://www.education.go.ke/sites/default/files/2022-05/2020RH_NationalSchoolReEntryGuidelines.pdf" },
+      { id:"kf-p07", name:"Menstrual Hygiene Management Policy (2019–2030)", year:2019, status:"Adopted", impl_pct:28, actors:["Ministry of Health","County Health Dept."], gap:"Implementation minimal at county level", advocacy:"Develop county MHM implementation plan", doc_url:"http://guidelines.health.go.ke:8000/media/Menstrual_Hygiene_Management_Policy_2019-2030-_May2020.pdf" }
     ],
     advocacy_issues: [
       { id:"kf-a01", problem:"SGBV Policy operational gap (unsigned by Governor)", priority:1, timeline:"6 Months", lead_org:"CREAW", member_orgs:["KELIN","FIDA Kenya","Kilifi Youth Network"], status:"In Progress", indicator:"Governor signs SGBV Policy 2020" },
@@ -189,8 +199,8 @@ window.COUNTIES = [
     sub_counties: 4, wards: 20,
     women_reproductive_age: 210000,
     policies: [
-      { id:"kw-p01", name:"Kwale County SGBV Act (2023/2024)", year:2023, status:"Enacted", impl_pct:35, actors:["County Government","Police","CSOs"], gap:"Enforcement weak; limited resources", advocacy:"Lobby for implementation budget", doc_url:"" },
-      { id:"kw-p02", name:"Gender & Social Inclusion Policy", year:2025, status:"Draft", impl_pct:0, actors:["County Gender Office","CSOs"], gap:"Not yet adopted", advocacy:"Engage County Executive for fast-track adoption", doc_url:"" }
+      { id:"kw-p01", name:"Kwale County SGBV Act (2023/2024)", year:2023, status:"Enacted", impl_pct:35, actors:["County Government","Police","CSOs"], gap:"Enforcement weak; limited resources", advocacy:"Lobby for implementation budget", doc_url:"https://www.kwaleassembly.go.ke/wp-content/uploads/2024/03/KWALE-COUNTY-SEXUALGENDER-BASED_2023.pdf" },
+      { id:"kw-p02", name:"Gender & Social Inclusion Policy", year:2025, status:"Draft", impl_pct:0, actors:["County Gender Office","CSOs"], gap:"Not yet adopted", advocacy:"Engage County Executive for fast-track adoption", doc_url:"https://kwale.go.ke/wp-content/uploads/2024/12/KWALE-GENDER-AND-SOCIAL-INCLUSIONPOLICY-2024-POPULAR-VERSION-DRAFT.pdf" }
     ],
     advocacy_issues: [
       { id:"kw-a01", problem:"No dedicated county SRHR policy", priority:1, timeline:"2 Years", lead_org:"PATH Kenya", member_orgs:["KELIN","USAID","Local CSOs"], status:"Not Started", indicator:"County SRHR Policy developed and adopted" },
