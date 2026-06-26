@@ -1,0 +1,208 @@
+/* EACHRights SRHR Portal — Base Styles
+   Color scheme aligned with EACHRights organizational identity (green/teal primary)
+*/
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  /* EACHRights Brand Colors */
+  --green:      #1a6e3c;   /* EACHRights primary green */
+  --green-dk:   #134f2b;
+  --green-lt:   #e8f5ee;
+  --green-mid:  #2d8a52;
+  --gold:       #c9a227;   /* Accent gold */
+  --gold-lt:    #fdf5dc;
+  --red:        #c0392b;   /* Alert/critical */
+  --red-lt:     #fdecea;
+  --amber:      #e67e22;
+  --amber-lt:   #fef3e6;
+  --blue:       #1a5276;
+  --teal:       #148f77;
+  --teal-lt:    #e0f5f1;
+  /* Neutrals */
+  --ink:        #1a1a2e;
+  --ink-mid:    #4a4a5a;
+  --ink-lt:     #7a7a8a;
+  --rule:       #dde3ee;
+  --paper:      #f4f6f8;
+  --sidebar:    #0d3d20;   /* Dark green nav */
+  --white:      #ffffff;
+  --shadow:     0 1px 4px rgba(0,0,0,0.08), 0 2px 12px rgba(0,0,0,0.06);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Source Sans 3',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);line-height:1.6;}
+a{color:var(--green);text-decoration:none;}
+a:hover{text-decoration:underline;}
+img{max-width:100%;}
+
+/* ── TOP NAV ── */
+.top-nav{background:var(--sidebar);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:54px;position:sticky;top:0;z-index:200;}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;cursor:pointer;}
+.nav-brand .logo-dot{width:32px;height:32px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--sidebar);letter-spacing:-0.5px;flex-shrink:0;}
+.nav-links{display:flex;gap:4px;}
+.nav-links a,.nav-links button{color:rgba(255,255,255,0.75);text-decoration:none;background:none;border:none;padding:6px 14px;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s,color .15s;}
+.nav-links a:hover,.nav-links a.active,.nav-links button:hover{background:rgba(255,255,255,0.15);color:#fff;text-decoration:none;}
+.nav-right{font-size:12px;color:rgba(255,255,255,0.5);display:flex;gap:10px;align-items:center;}
+
+/* ── HERO BAND ── */
+.hero-band{background:var(--sidebar);color:#fff;padding:40px 48px 38px;}
+.hero-band .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.hero-band h1{font-family:'Source Serif 4',serif;font-size:28px;font-weight:600;line-height:1.25;max-width:680px;margin-bottom:8px;}
+.hero-band p{font-size:15px;color:rgba(255,255,255,0.75);max-width:640px;line-height:1.6;margin-bottom:16px;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;}
+.hero-meta span{font-size:12px;color:rgba(255,255,255,0.55);}
+.hero-meta strong{color:rgba(255,255,255,0.85);}
+
+/* ── STAT CARDS BAR ── */
+.stat-bar{background:var(--green);display:flex;flex-wrap:wrap;}
+.stat-card{flex:1;min-width:160px;padding:20px 24px;border-right:1px solid rgba(255,255,255,0.12);color:#fff;}
+.stat-card:last-child{border-right:none;}
+.stat-card .num{font-family:'Source Serif 4',serif;font-size:32px;font-weight:600;line-height:1;color:var(--gold);}
+.stat-card .lbl{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;line-height:1.3;}
+
+/* ── SECTION LAYOUT ── */
+.section{padding:32px 48px;}
+.section-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;border-bottom:2px solid var(--green);padding-bottom:10px;}
+.section-hd h2{font-family:'Source Serif 4',serif;font-size:18px;font-weight:600;color:var(--ink);}
+.section-hd .meta{font-size:12px;color:var(--ink-lt);}
+
+/* ── CARDS GRID ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.county-card{background:var(--white);border-radius:8px;box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.county-card:hover{transform:translateY(-3px);box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+.county-card .card-header{height:8px;}
+.county-card .card-body{padding:20px;}
+.county-card h3{font-size:17px;font-weight:700;margin-bottom:2px;}
+.county-card .region{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-lt);margin-bottom:12px;}
+.county-card .hero-num{font-family:'Source Serif 4',serif;font-size:36px;font-weight:600;line-height:1;color:var(--red);}
+.county-card .hero-lbl{font-size:12px;color:var(--ink-mid);margin-top:3px;}
+.county-card .card-footer{padding:12px 20px;background:var(--paper);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-lt);}
+.county-card .card-footer .arrow{color:var(--green);font-size:16px;}
+
+/* ── MAP CONTAINER ── */
+.map-wrap{background:var(--white);border-radius:8px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:24px;}
+.map-wrap #landing-map{height:400px;width:100%;}
+
+/* ── NATIONAL POLICIES TABLE ── */
+.policy-table{width:100%;border-collapse:collapse;font-size:13px;}
+.policy-table th{background:var(--green);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:12px;letter-spacing:.05em;}
+.policy-table td{padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:middle;}
+.policy-table tr:last-child td{border-bottom:none;}
+.policy-table tr:hover td{background:var(--green-lt);}
+.impl-bar{height:6px;background:#e0e0e0;border-radius:3px;min-width:80px;}
+.impl-fill{height:6px;border-radius:3px;transition:width .4s;}
+
+/* ── STATUS PILLS ── */
+.pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap;}
+.pill-adopted{background:#d4edda;color:#155724;}
+.pill-progress{background:#fff3cd;color:#856404;}
+.pill-stalled{background:#f8d7da;color:#721c24;}
+.pill-draft{background:#d1ecf1;color:#0c5460;}
+.pill-enacted{background:#d4edda;color:#155724;}
+.pill-notoperational{background:#f8d7da;color:#721c24;}
+.pill-partiallyimplemented{background:#fff3cd;color:#856404;}
+.pill-notstarted{background:#e2e3e5;color:#383d41;}
+.pill-inprogress{background:#fff3cd;color:#856404;}
+.pill-completed{background:#d4edda;color:#155724;}
+
+/* ── PRIORITY BADGE ── */
+.priority-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;background:var(--green);color:#fff;}
+.priority-1{background:var(--red);}
+.priority-2{background:var(--amber);}
+.priority-3{background:var(--gold);}
+
+/* ── UPDATES FEED ── */
+.update-item{padding:16px 0;border-bottom:1px solid var(--rule);display:flex;gap:16px;}
+.update-item:last-child{border-bottom:none;}
+.update-date{flex-shrink:0;width:70px;font-size:11px;color:var(--ink-lt);padding-top:2px;}
+.update-body h4{font-size:14px;font-weight:600;margin-bottom:4px;}
+.update-body p{font-size:13px;color:var(--ink-mid);line-height:1.5;}
+.update-source{font-size:11px;color:var(--ink-lt);margin-top:6px;}
+.tag{display:inline-block;background:var(--green-lt);color:var(--green);border-radius:3px;padding:1px 7px;font-size:10px;margin-right:4px;font-weight:600;}
+
+/* ── ADD UPDATE FORM ── */
+.add-update-panel{background:var(--green-lt);border:1px solid rgba(26,110,60,.2);border-radius:8px;padding:20px;margin-top:20px;}
+.add-update-panel h4{font-size:14px;font-weight:700;color:var(--green-dk);margin-bottom:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-row.full{grid-template-columns:1fr;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--green-dk);margin-bottom:4px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid rgba(26,110,60,.3);border-radius:4px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--white);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:background .2s;}
+.btn-primary{background:var(--green);color:#fff;}
+.btn-primary:hover{background:var(--green-dk);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-outline{background:transparent;border:1px solid var(--green);color:var(--green);}
+.btn-outline:hover{background:var(--green-lt);}
+.json-preview{background:#1a1a2e;color:#a8ff78;border-radius:4px;padding:12px;font-size:11px;font-family:monospace;margin-top:10px;white-space:pre-wrap;max-height:160px;overflow-y:auto;}
+
+/* ── COUNTY DETAIL LAYOUT ── */
+.county-layout{display:grid;grid-template-columns:1fr 320px;gap:24px;padding:32px 48px;align-items:start;}
+.county-main{min-width:0;}
+.county-sidebar>*{margin-bottom:20px;}
+
+/* ── SIDEBAR CARDS ── */
+.side-card{background:var(--white);border-radius:8px;box-shadow:var(--shadow);padding:20px;}
+.side-card h3{font-size:14px;font-weight:700;color:var(--green-dk);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+.side-stat{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--rule);font-size:13px;}
+.side-stat:last-child{border-bottom:none;}
+.side-stat .val{font-weight:700;color:var(--ink);}
+.side-stat .bm{font-size:11px;color:var(--ink-lt);}
+.side-stat.above .val{color:var(--red);}
+.side-stat.below .val{color:var(--amber);}
+.side-stat.critical .val{color:var(--red);}
+
+/* ── STAKEHOLDER LISTS ── */
+.stakeholder-group{margin-bottom:12px;}
+.stakeholder-group h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-lt);margin-bottom:6px;font-weight:600;}
+.stakeholder-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.stk-tag{display:inline-block;background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:2px 8px;font-size:11px;color:var(--ink-mid);}
+
+/* ── CHART WRAPPER ── */
+.chart-wrap{background:var(--white);border-radius:8px;box-shadow:var(--shadow);padding:20px;margin-bottom:20px;}
+.chart-wrap h3{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:14px;}
+.chart-wrap canvas{max-height:220px;}
+
+/* ── COUNTY MAP ── */
+#county-map{height:280px;border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{padding:10px 48px;font-size:12px;color:var(--ink-lt);background:var(--white);border-bottom:1px solid var(--rule);}
+.breadcrumb a{color:var(--green);}
+.breadcrumb .sep{margin:0 6px;}
+
+/* ── PAGE TOGGLE ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── FOOTER ── */
+footer{background:var(--sidebar);color:rgba(255,255,255,.6);text-align:center;padding:24px 48px;font-size:12px;line-height:1.7;}
+footer strong{color:rgba(255,255,255,.9);}
+footer a{color:var(--gold);}
+
+/* ── PRINT STYLES ── */
+@media print {
+  .top-nav,.nav-links,.add-update-panel,.btn,.breadcrumb,.chart-wrap canvas{display:none!important;}
+  body{background:#fff;font-size:12px;}
+  .county-layout{grid-template-columns:1fr;padding:0;}
+  .county-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .policy-table,.advocacy-table{font-size:11px;}
+  .hero-band{background:var(--sidebar)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .stat-bar{background:var(--green)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{margin:15mm;size:A4;}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-band{padding:28px 20px;}
+  .section{padding:24px 20px;}
+  .county-layout{grid-template-columns:1fr;padding:20px;}
+  .breadcrumb{padding:10px 20px;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .stat-bar{flex-direction:column;}
+  .stat-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.12);}
+  .cards-grid{grid-template-columns:1fr;}
+  .top-nav{padding:0 16px;}
+}

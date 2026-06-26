@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EACHRights SRHR Advocacy Portal — Kenya</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+.intro-band{background:var(--white);padding:28px 48px;border-bottom:1px solid var(--rule);}
+.intro-band p{max-width:860px;font-size:15px;color:var(--ink-mid);line-height:1.7;}
+.intro-band .highlight{color:var(--green);font-weight:600;}
+.county-index{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.county-index a{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--green-lt);border:1px solid rgba(26,110,60,.2);border-radius:4px;font-size:13px;color:var(--green);font-weight:600;text-decoration:none;}
+.county-index a:hover{background:var(--green);color:#fff;}
+.np-category{display:inline-block;background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:1px 7px;font-size:11px;color:var(--ink-lt);}
+.section-alt{background:var(--white);}
+.doc-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--green);font-weight:600;}
+.doc-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-brand" onclick="window.scrollTo(0,0)">
+    <div class="logo-dot">ER</div>
+    <span>EACHRights SRHR Portal</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Counties</a>
+    <a href="#national-policies">National Policies</a>
+    <a href="#about">About</a>
+  </div>
+  <div class="nav-right" id="last-updated"></div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-band">
+  <div class="eyebrow">EACHRights · Amplify Change · Kenya</div>
+  <h1>SRHR Advocacy Data Portal</h1>
+  <p id="hero-tagline"></p>
+  <div class="hero-meta">
+    <span>Project Period: <strong id="project-period"></strong></span>
+    <span>Counties Covered: <strong>4</strong></span>
+    <span>Last Updated: <strong id="hero-updated"></strong></span>
+  </div>
+</div>
+
+<!-- SUMMARY STATS BAR -->
+<div class="stat-bar" id="stat-bar"></div>
+
+<!-- INTRO PARAGRAPH -->
+<div class="intro-band">
+  <p>This portal tracks the <span class="highlight">Sexual and Reproductive Health and Rights (SRHR)</span> advocacy landscape across four target counties in Kenya — <span class="highlight">Homa Bay, Migori, Kilifi, and Kwale</span> — as part of EACHRights' three-year project: <em>"Taking on the Legal and Policy Advocacy Challenge: Promoting Synergies Among SRHR Social Movements in Kenya,"</em> funded by Amplify Change. The dashboard monitors policy implementation status, advocacy priorities, CSO activities, and budget trends to support evidence-based advocacy and coordination.</p>
+  <div class="county-index" id="county-index"></div>
+</div>
+
+<!-- KENYA MAP -->
+<div class="section">
+  <div class="section-hd">
+    <h2>Target Counties — Geographic Overview</h2>
+    <span class="meta">Click a county to view its profile</span>
+  </div>
+  <div class="map-wrap">
+    <div id="landing-map"></div>
+  </div>
+</div>
+
+<!-- COUNTY CARDS -->
+<div class="section section-alt">
+  <div class="section-hd">
+    <h2>County Profiles</h2>
+    <span class="meta">4 target counties</span>
+  </div>
+  <div class="cards-grid" id="county-cards"></div>
+</div>
+
+<!-- NATIONAL POLICIES -->
+<div class="section" id="national-policies">
+  <div class="section-hd">
+    <h2>National SRHR Policy Framework</h2>
+    <span class="meta">Key national policies applicable across all counties</span>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="policy-table" id="national-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Policy / Legal Framework</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Implementation</th>
+          <th>Key Gap</th>
+          <th>Document</th>
+        </tr>
+      </thead>
+      <tbody id="national-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section section-alt" id="about">
+  <div class="section-hd">
+    <h2>About This Portal</h2>
+  </div>
+  <div style="max-width:720px;color:var(--ink-mid);font-size:14px;line-height:1.8;">
+    <p>This portal is maintained by <strong>EACHRights (East African Centre for Human Rights)</strong> with support from <strong>Amplify Change</strong>. Data is updated by project field teams. To add new advocacy updates, open the county page and use the "Add Update" panel at the bottom.</p>
+    <p style="margin-top:12px;">For questions or data corrections, contact the EACHRights monitoring and evaluation team. Source documents are available on individual county pages.</p>
+    <p style="margin-top:12px;font-size:12px;color:var(--ink-lt);">Portal designed and built: June 2026 · Framework reference: UNHCR Data Portal pattern · Technology: Vanilla HTML/CSS/JS + Chart.js + Leaflet</p>
+  </div>
+</div>
+
+<footer>
+  <strong>EACHRights — East African Centre for Human Rights</strong><br>
+  Supported by <a href="#">Amplify Change</a> · Three-Year SRHR Advocacy Project (2024–2027)<br>
+  <span style="font-size:11px;margin-top:4px;display:block;">This portal is for advocacy monitoring and coordination purposes.</span>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data/counties.js"></script>
+<script>
+// ── INIT SITE CONFIG ──
+document.getElementById('hero-tagline').textContent = SITE.tagline;
+document.getElementById('project-period').textContent = SITE.project_period;
+document.getElementById('hero-updated').textContent = SITE.last_updated;
+document.getElementById('last-updated').textContent = 'Updated: ' + SITE.last_updated;
+
+// ── STAT BAR ──
+const totalCSOs = COUNTIES.reduce((a,c) => a + parseInt(c.key_stats.find(s=>s.label==='Active CSOs')?.value || '0'), 0);
+const statBar = document.getElementById('stat-bar');
+[
+  {num:'4', lbl:'Counties Covered'},
+  {num:'~78', lbl:'Active CSOs Tracked'},
+  {num:'16', lbl:'County Policies Monitored'},
+  {num:'8', lbl:'National Frameworks'},
+  {num:'20', lbl:'Advocacy Issues Tracked'}
+].forEach(s => {
+  statBar.innerHTML += `<div class="stat-card"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`;
+});
+
+// ── COUNTY INDEX ──
+const idx = document.getElementById('county-index');
+COUNTIES.forEach(c => {
+  idx.innerHTML += `<a href="county.html?id=${c.id}">📍 ${c.name}</a>`;
+});
+
+// ── COUNTY CARDS ──
+const cards = document.getElementById('county-cards');
+COUNTIES.forEach(c => {
+  const hs = c.hero_stat;
+  cards.innerHTML += `
+  <div class="county-card" onclick="window.location='county.html?id=${c.id}'">
+    <div class="card-header" style="background:${c.color};"></div>
+    <div class="card-body">
+      <h3>${c.name}</h3>
+      <div class="region">${c.region} Region &nbsp;·&nbsp; Pop. ${c.population.toLocaleString()}</div>
+      <div class="hero-num">${hs.value}</div>
+      <div class="hero-lbl">${hs.label} <span style="font-size:11px;color:var(--ink-lt)">(national avg ${hs.national_avg})</span></div>
+      <div style="margin-top:14px;font-size:12px;color:var(--ink-lt);">${c.policies.length} policies · ${c.advocacy_issues.length} advocacy priorities</div>
+    </div>
+    <div class="card-footer">
+      <span>${c.key_stats.find(s=>s.label==='Active CSOs')?.value || '?'} Active CSOs</span>
+      <span class="arrow">→</span>
+    </div>
+  </div>`;
+});
+
+// ── NATIONAL POLICIES TABLE ──
+const tbody = document.getElementById('national-tbody');
+NATIONAL_POLICIES.forEach((p,i) => {
+  const color = p.impl_pct >= 60 ? '#27ae60' : p.impl_pct >= 40 ? '#e67e22' : '#c0392b';
+  const statusClass = 'pill-' + p.status.toLowerCase().replace(/\s+/g,'');
+  const docHtml = p.doc_url ? `<a class="doc-link" href="${p.doc_url}" target="_blank">⬇ Download</a>` : '<span style="color:var(--ink-lt);font-size:11px;">—</span>';
+  tbody.innerHTML += `
+  <tr>
+    <td style="color:var(--ink-lt);font-size:12px;">${i+1}.${i+1}</td>
+    <td><strong>${p.name}</strong></td>
+    <td><span class="np-category">${p.category}</span></td>
+    <td><span class="pill pill-${p.status.toLowerCase().replace(/[\s\/]/g,'')}">${p.status}</span></td>
+    <td>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="impl-bar" style="width:90px;"><div class="impl-fill" style="width:${p.impl_pct}%;background:${color};"></div></div>
+        <span style="font-size:12px;font-weight:600;">${p.impl_pct}%</span>
+      </div>
+    </td>
+    <td style="font-size:12px;color:var(--ink-mid);max-width:220px;">${p.gap}</td>
+    <td>${docHtml}</td>
+  </tr>`;
+});
+
+// ── LEAFLET MAP ──
+const map = L.map('landing-map', {scrollWheelZoom:false}).setView([-1.5, 37.5], 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+  maxZoom:18
+}).addTo(map);
+
+COUNTIES.forEach(c => {
+  const icon = L.divIcon({
+    html:`<div style="background:${c.color};width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);"></div>`,
+    className:'', iconSize:[14,14], iconAnchor:[7,7]
+  });
+  L.marker([c.lat, c.lng], {icon})
+    .addTo(map)
+    .bindPopup(`<strong>${c.name} County</strong><br>${c.hero_stat.label}: <b style="color:${c.color}">${c.hero_stat.value}</b><br><a href="county.html?id=${c.id}" style="color:#1a6e3c;font-weight:600;">View County Profile →</a>`)
+    .on('click', () => {});
+  L.marker([c.lat + 0.15, c.lng + 0.1], {
+    icon: L.divIcon({html:`<div style="font-size:12px;font-weight:700;color:${c.color};white-space:nowrap;text-shadow:1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;">${c.name}</div>`, className:'', iconSize:[80,20]})
+  }).addTo(map);
+});
+</script>
+</body>
+</html>
