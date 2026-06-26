@@ -8,64 +8,49 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-.county-hero-stat{display:flex;align-items:baseline;gap:10px;margin:16px 0 8px;}
-.county-hero-num{font-family:'Source Serif 4',serif;font-size:48px;font-weight:600;color:var(--gold);line-height:1;}
-.county-hero-lbl{font-size:14px;color:rgba(255,255,255,.7);}
-.county-hero-avg{font-size:12px;color:rgba(255,255,255,.5);}
-
-.policy-row-header{background:var(--green)!important;color:#fff!important;}
-.policy-table td:first-child{max-width:280px;}
-
-.advocacy-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px;}
-.advocacy-table th{background:var(--sidebar);color:#fff;padding:9px 12px;text-align:left;font-size:11px;letter-spacing:.05em;}
-.advocacy-table td{padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top;}
+.county-hero-stat{display:flex;align-items:baseline;gap:12px;margin:16px 0 8px;}
+.county-hero-num{font-family:'Source Serif 4',serif;font-size:52px;font-weight:600;color:var(--gold);line-height:1;}
+.county-hero-lbl{font-size:15px;color:rgba(255,255,255,.75);}
+.county-hero-avg{font-size:13px;color:rgba(255,255,255,.5);}
+.advocacy-table{width:100%;border-collapse:collapse;font-size:14px;}
+.advocacy-table th{background:var(--sidebar);color:#fff;padding:10px 13px;text-align:left;font-size:12px;letter-spacing:.05em;}
+.advocacy-table td{padding:10px 13px;border-bottom:1px solid var(--rule);vertical-align:top;}
 .advocacy-table tr:hover td{background:var(--green-lt);}
-
 .capacity-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
 .cap-box{background:var(--paper);border-radius:6px;padding:14px;}
 .cap-box h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
 .cap-box.strengths h4{color:var(--green);}
 .cap-box.gaps h4{color:var(--red);}
-.cap-item{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--ink-mid);margin-bottom:5px;}
-.cap-item::before{content:'•';flex-shrink:0;}
-.cap-item.gap::before{content:'✗';color:var(--red);}
-.cap-item.str::before{content:'✓';color:var(--green);}
-
+.cap-item{font-size:13px;color:var(--ink-mid);margin-bottom:5px;padding-left:14px;position:relative;}
+.cap-item.str::before{content:'✓';position:absolute;left:0;color:var(--green);}
+.cap-item.gap::before{content:'✗';position:absolute;left:0;color:var(--red);}
 .print-btn{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--sidebar);border:none;padding:8px 16px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .print-btn:hover{background:#b8921f;}
-
-.doc-upload-section{background:var(--paper);border:2px dashed var(--rule);border-radius:6px;padding:16px;text-align:center;font-size:13px;color:var(--ink-lt);margin-top:8px;}
-.doc-upload-section input{display:none;}
-.doc-upload-section label{cursor:pointer;color:var(--green);font-weight:600;}
-
-.update-add-toggle{background:none;border:1px solid var(--green);color:var(--green);padding:6px 14px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:12px;}
+.update-add-toggle{background:none;border:1px solid var(--green);color:var(--green);padding:6px 14px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:12px;}
 .update-add-toggle:hover{background:var(--green-lt);}
-
-.status-note{background:var(--gold-lt);border-left:3px solid var(--gold);padding:8px 12px;font-size:12px;border-radius:0 4px 4px 0;margin-top:8px;color:var(--ink-mid);}
+.status-note{background:var(--gold-lt);border-left:3px solid var(--gold);padding:10px 14px;font-size:13px;border-radius:0 4px 4px 0;margin-top:10px;color:var(--ink-mid);}
+.section-gold{background:var(--gold-lt);}
+.section-green{background:var(--green-lt);}
 </style>
 </head>
 <body>
-<!-- NAV -->
 <nav class="top-nav">
   <div class="nav-brand" onclick="window.location='index.html'">
     <div class="logo-dot">ER</div>
     <span>EACHRights SRHR Portal</span>
   </div>
   <div class="nav-links">
-    <a href="index.html">Counties</a>
+    <a href="index.html">← Counties</a>
+    <a href="admin.html">⚙ Admin</a>
     <button onclick="window.print()" class="print-btn">⎙ Print / PDF</button>
   </div>
   <div class="nav-right" id="nav-county-name"></div>
 </nav>
 
-<!-- BREADCRUMB -->
 <div class="breadcrumb">
-  <a href="index.html">Home</a>
-  <span class="sep">›</span>
-  <span id="bc-name">County Profile</span>
+  <a href="index.html">Home</a><span class="sep">›</span><span id="bc-name">County Profile</span>
 </div>
 
-<!-- COUNTY HERO -->
 <div class="hero-band" id="county-hero">
   <div class="eyebrow" id="hero-eyebrow"></div>
   <h1 id="hero-title"></h1>
@@ -76,7 +61,7 @@
       <div class="county-hero-avg" id="hero-avg"></div>
     </div>
   </div>
-  <p id="hero-overview"></p>
+  <p id="hero-overview" style="font-size:15px;"></p>
   <div class="hero-meta" style="margin-top:14px;">
     <span>Sub-counties: <strong id="hero-sub"></strong></span>
     <span>Wards: <strong id="hero-wards"></strong></span>
@@ -84,178 +69,100 @@
   </div>
 </div>
 
-<!-- STAT BAR -->
 <div class="stat-bar" id="county-stat-bar"></div>
 
-<!-- MAIN LAYOUT -->
 <div class="county-layout">
-  <!-- MAIN COLUMN -->
   <div class="county-main">
 
-    <!-- COUNTY MAP -->
-    <div id="county-map"></div>
+    <!-- MAP -->
+    <div id="county-map" style="height:300px;border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;"></div>
 
-    <!-- POLICY TABLE -->
-    <div class="section" style="padding:0 0 24px;">
-      <div class="section-hd">
-        <h2>Policy & Legal Environment</h2>
-        <span class="meta" id="policy-count"></span>
-      </div>
+    <!-- POLICIES -->
+    <div class="section" style="padding:0 0 28px;">
+      <div class="section-hd"><h2>Policy &amp; Legal Environment</h2><span class="meta" id="policy-count"></span></div>
       <div style="overflow-x:auto;">
-        <table class="policy-table" id="policy-table">
-          <thead>
-            <tr>
-              <th>Policy / Bill</th>
-              <th>Year</th>
-              <th>Status</th>
-              <th>Implementation</th>
-              <th>Key Gap</th>
-              <th>Advocacy Opportunity</th>
-              <th>Document</th>
-            </tr>
-          </thead>
+        <table class="policy-table">
+          <thead><tr><th>Policy / Bill</th><th>Year</th><th>Status</th><th>Implementation</th><th>Key Gap</th><th>Advocacy Opportunity</th><th>Doc</th></tr></thead>
           <tbody id="policy-tbody"></tbody>
         </table>
       </div>
-      <div class="status-note">💡 <strong>To update a policy status:</strong> Open <code>data/counties.js</code>, find your county by name, locate the policy by <code>id</code>, and change the <code>status</code>, <code>impl_pct</code>, or <code>gap</code> fields. Save the file and refresh.</div>
+      <div class="status-note">💡 <strong>To update policy status:</strong> Go to <a href="admin.html" style="color:var(--green);font-weight:600;">Admin Panel</a> — no coding required.</div>
     </div>
 
-    <!-- ADVOCACY ISSUES -->
-    <div class="section" style="padding:0 0 24px;">
-      <div class="section-hd">
-        <h2>Advocacy Priorities</h2>
-        <span class="meta" id="adv-count"></span>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="advocacy-table" id="advocacy-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Problem / Advocacy Issue</th>
-              <th>Lead Org</th>
-              <th>Timeline</th>
-              <th>Status</th>
-              <th>Success Indicator</th>
-            </tr>
-          </thead>
+    <!-- ADVOCACY -->
+    <div class="section section-green" style="padding:24px 0 28px;border-radius:8px;margin-bottom:24px;">
+      <div class="section-hd" style="padding:0 20px 10px;"><h2>Advocacy Priorities</h2><span class="meta" id="adv-count"></span></div>
+      <div style="overflow-x:auto;padding:0 20px;">
+        <table class="advocacy-table">
+          <thead><tr><th>#</th><th>Problem / Advocacy Issue</th><th>Lead Org</th><th>Timeline</th><th>Status</th><th>Success Indicator</th></tr></thead>
           <tbody id="advocacy-tbody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- UPDATES FEED -->
-    <div class="section" style="padding:0 0 24px;">
-      <div class="section-hd">
-        <h2>Updates &amp; Reports</h2>
-        <span class="meta">Field reports and advocacy progress</span>
-      </div>
+    <!-- UPDATES -->
+    <div class="section" style="padding:0 0 28px;">
+      <div class="section-hd"><h2>Updates &amp; Reports</h2><span class="meta">Field reports and advocacy progress</span></div>
       <div id="updates-feed"></div>
-
-      <!-- ADD UPDATE -->
       <button class="update-add-toggle" onclick="toggleAddUpdate()">+ Add New Update</button>
       <div class="add-update-panel" id="add-update-panel" style="display:none;">
         <h4>➕ Add Advocacy Update</h4>
         <div class="form-row">
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="upd-date">
-          </div>
-          <div class="form-group">
-            <label>Source / Organization</label>
-            <input type="text" id="upd-source" placeholder="e.g. EACHRights Field Team">
-          </div>
+          <div class="form-group"><label>Date</label><input type="date" id="upd-date"></div>
+          <div class="form-group"><label>Source / Organization</label><input type="text" id="upd-source" placeholder="e.g. EACHRights Field Team"></div>
         </div>
-        <div class="form-row full">
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" id="upd-title" placeholder="Brief title for the update">
-          </div>
-        </div>
-        <div class="form-row full">
-          <div class="form-group">
-            <label>Description</label>
-            <textarea id="upd-body" placeholder="Describe what happened, decisions made, next steps..."></textarea>
-          </div>
-        </div>
+        <div class="form-row full"><div class="form-group"><label>Title</label><input type="text" id="upd-title" placeholder="Brief title"></div></div>
+        <div class="form-row full"><div class="form-group"><label>Description</label><textarea id="upd-body" placeholder="Describe what happened, decisions made, next steps..."></textarea></div></div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Tags (comma-separated)</label>
-            <input type="text" id="upd-tags" placeholder="policy, sgbv, meeting">
-          </div>
-          <div class="form-group" style="display:flex;align-items:flex-end;">
-            <button class="btn btn-primary" onclick="saveUpdate()">Save Update</button>
-          </div>
+          <div class="form-group"><label>Tags (comma-separated)</label><input type="text" id="upd-tags" placeholder="policy, sgbv, meeting"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" onclick="saveUpdate()">Save Update</button></div>
         </div>
         <div id="json-output" style="display:none;">
-          <p style="font-size:12px;color:var(--green-dk);margin-bottom:6px;font-weight:600;">✅ Update saved! Copy this JSON snippet into <code>data/counties.js</code> under your county's <code>updates</code> array for permanent storage:</p>
-          <div class="json-preview" id="json-preview"></div>
+          <p style="font-size:13px;color:var(--green-dk);margin-bottom:6px;font-weight:600;">✅ Update saved and visible above!</p>
         </div>
       </div>
     </div>
 
-    <!-- DOCUMENT UPLOADS -->
-    <div class="section" style="padding:0 0 24px;">
-      <div class="section-hd">
-        <h2>Documents</h2>
-        <span class="meta">Policy documents and reports</span>
-      </div>
+    <!-- DOCUMENTS -->
+    <div class="section section-gold" style="padding:24px;border-radius:8px;margin-bottom:24px;">
+      <div class="section-hd"><h2>Documents</h2><span class="meta">Policy documents and reports</span></div>
       <div id="docs-list"></div>
-      <div class="doc-upload-section">
-        <div>📎 Attach a policy document or report to this county</div>
-        <div style="margin-top:8px;font-size:12px;">Documents are stored locally. To make them permanently accessible, add the file to the <code>docs/</code> folder and update the <code>doc_url</code> field in <code>data/counties.js</code>.</div>
-      </div>
+      <p style="font-size:13px;color:var(--ink-mid);margin-top:10px;">To attach documents, go to <a href="admin.html" style="color:var(--green);font-weight:600;">Admin Panel → Documents</a>.</p>
     </div>
 
-  </div><!-- /.county-main -->
+  </div>
 
   <!-- SIDEBAR -->
   <div class="county-sidebar">
-
-    <!-- KEY STATS -->
     <div class="side-card">
       <h3>Key Health Indicators</h3>
       <div id="key-stats"></div>
     </div>
-
-    <!-- BUDGET CHART -->
     <div class="chart-wrap">
       <h3>SRHR Budget Trend (KShs M)</h3>
       <canvas id="budget-chart"></canvas>
     </div>
-
-    <!-- IMPLEMENTATION CHART -->
     <div class="chart-wrap">
-      <h3>Policy Implementation Overview</h3>
+      <h3>Policy Implementation</h3>
       <canvas id="impl-chart"></canvas>
     </div>
-
-    <!-- STAKEHOLDERS -->
     <div class="side-card">
       <h3>Key Stakeholders</h3>
       <div id="stakeholders"></div>
     </div>
-
-    <!-- CSO CAPACITY -->
     <div class="side-card">
-      <h3>CSO Capacity Assessment</h3>
+      <h3>CSO Capacity</h3>
       <div class="capacity-grid">
-        <div class="cap-box strengths">
-          <h4>Strengths</h4>
-          <div id="cso-strengths"></div>
-        </div>
-        <div class="cap-box gaps">
-          <h4>Gaps</h4>
-          <div id="cso-gaps"></div>
-        </div>
+        <div class="cap-box strengths"><h4>Strengths</h4><div id="cso-strengths"></div></div>
+        <div class="cap-box gaps"><h4>Gaps</h4><div id="cso-gaps"></div></div>
       </div>
       <div style="margin-top:12px;">
-        <h4 style="font-size:12px;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Coordination Mechanisms</h4>
+        <h4 style="font-size:12px;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Coordination</h4>
         <div id="coordination"></div>
       </div>
     </div>
-
-  </div><!-- /.county-sidebar -->
-</div><!-- /.county-layout -->
+  </div>
+</div>
 
 <footer>
   <strong>EACHRights — East African Centre for Human Rights</strong><br>
@@ -265,17 +172,30 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data/counties.js"></script>
 <script>
-// ── LOAD COUNTY ──
 const params = new URLSearchParams(location.search);
-const countyId = params.get('id') || 'homa-bay';
-const C = COUNTIES.find(c => c.id === countyId);
-if (!C) { document.body.innerHTML = '<p style="padding:40px;">County not found. <a href="index.html">Go home</a></p>'; throw 0; }
+const countyId = params.get('id')||'homa-bay';
+
+// Merge localStorage overrides
+function getCounty(id) {
+  const base = JSON.parse(JSON.stringify(COUNTIES.find(c=>c.id===id)));
+  if(!base) return null;
+  const overrides = JSON.parse(localStorage.getItem('admin_'+id)||'{}');
+  if(overrides.policies) {
+    base.policies = base.policies.map(p => {
+      const ov = overrides.policies.find(x=>x.id===p.id);
+      return ov ? {...p,...ov} : p;
+    });
+  }
+  if(overrides.updates) base.updates = [...overrides.updates, ...base.updates];
+  return base;
+}
+
+const C = getCounty(countyId);
+if(!C){document.body.innerHTML='<p style="padding:40px;">County not found. <a href="index.html">Go home</a></p>';throw 0;}
 
 document.title = `${C.name} County — EACHRights SRHR Portal`;
-
-// ── HERO ──
-document.getElementById('nav-county-name').textContent = C.name + ' County';
-document.getElementById('bc-name').textContent = C.name + ' County';
+document.getElementById('nav-county-name').textContent = C.name+' County';
+document.getElementById('bc-name').textContent = C.name+' County';
 document.getElementById('hero-eyebrow').textContent = `${C.region} Region · ${C.name} County · EACHRights`;
 document.getElementById('hero-title').textContent = `${C.name} County — SRHR Profile`;
 document.getElementById('hero-num').textContent = C.hero_stat.value;
@@ -284,170 +204,147 @@ document.getElementById('hero-avg').textContent = `National average: ${C.hero_st
 document.getElementById('hero-overview').textContent = C.overview;
 document.getElementById('hero-sub').textContent = C.sub_counties;
 document.getElementById('hero-wards').textContent = C.wards;
-document.getElementById('hero-women').textContent = C.women_reproductive_age?.toLocaleString() || '—';
+document.getElementById('hero-women').textContent = C.women_reproductive_age?.toLocaleString()||'—';
 
-// ── STAT BAR ──
+// Stat bar
 const sb = document.getElementById('county-stat-bar');
 C.key_stats.forEach(s => {
-  sb.innerHTML += `<div class="stat-card"><div class="num" style="font-size:22px;">${s.value}</div><div class="lbl">${s.label}${s.benchmark ? '<br><span style="font-size:10px;opacity:.7">'+s.benchmark+'</span>' : ''}</div></div>`;
+  sb.innerHTML += `<div class="stat-card"><div class="num" style="font-size:22px;">${s.value}</div><div class="lbl">${s.label}${s.benchmark?'<br><span style="font-size:10px;opacity:.7">'+s.benchmark+'</span>':''}</div></div>`;
 });
 
-// ── COUNTY MAP ──
-const cmap = L.map('county-map', {scrollWheelZoom:false}).setView([C.lat, C.lng], 9);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap',maxZoom:18}).addTo(cmap);
-L.circleMarker([C.lat, C.lng], {radius:14,fillColor:C.color,fillOpacity:.8,color:'#fff',weight:3})
-  .addTo(cmap).bindPopup(`<strong>${C.name} County</strong><br>${C.hero_stat.label}: <b>${C.hero_stat.value}</b>`).openPopup();
+// County map — polygon + locked zoom
+const countyBounds = {
+  'homa-bay': [[-1.2,33.8],[-0.0,34.9]],
+  'migori':   [[-1.4,34.0],[-0.5,34.8]],
+  'kilifi':   [[-4.2,39.2],[-2.8,40.1]],
+  'kwale':    [[-4.7,38.9],[-3.5,39.8]]
+};
+const cmap = L.map('county-map', {scrollWheelZoom:false, zoomControl:true, dragging:false, doubleClickZoom:false});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{attribution:'© CARTO © OSM',maxZoom:18}).addTo(cmap);
 
-// ── POLICY TABLE ──
+fetch('data/counties.geojson')
+  .then(r=>r.json())
+  .then(geojson => {
+    const feat = geojson.features.find(f=>f.properties.id===countyId);
+    if(!feat) return;
+    const layer = L.geoJSON(feat, {
+      style:{ fillColor:C.color, fillOpacity:0.4, color:'#fff', weight:2.5 }
+    }).addTo(cmap);
+    cmap.fitBounds(layer.getBounds(), {padding:[20,20]});
+    // Lock zoom to county bounds
+    const bounds = layer.getBounds();
+    cmap.setMaxBounds(bounds.pad(0.3));
+    cmap.setMinZoom(cmap.getZoom()-1);
+    cmap.setMaxZoom(cmap.getZoom()+2);
+    // County label
+    const center = layer.getBounds().getCenter();
+    L.marker(center, {
+      icon:L.divIcon({html:`<div style="font-size:15px;font-weight:800;color:${C.color};text-shadow:1px 1px 0 #fff,-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff;">${C.name} County</div>`,className:'',iconSize:[140,24],iconAnchor:[70,12]})
+    }).addTo(cmap);
+  });
+
+// Policy table
 document.getElementById('policy-count').textContent = `${C.policies.length} policies tracked`;
 const pb = document.getElementById('policy-tbody');
 C.policies.forEach(p => {
-  const col = p.impl_pct >= 60 ? '#27ae60' : p.impl_pct >= 30 ? '#e67e22' : '#c0392b';
-  const sc = 'pill-' + p.status.toLowerCase().replace(/[\s\/\-]+/g,'');
-  const doc = p.doc_url ? `<a class="doc-link" href="${p.doc_url}" target="_blank">⬇</a>` : '—';
+  const col = p.impl_pct>=60?'#27ae60':p.impl_pct>=30?'#e67e22':'#c0392b';
+  const sc = 'pill-'+p.status.toLowerCase().replace(/[\s\/\-]+/g,'');
   pb.innerHTML += `<tr>
-    <td><strong>${p.name}</strong></td>
-    <td>${p.year}</td>
+    <td><strong style="font-size:14px;">${p.name}</strong></td>
+    <td style="font-size:13px;">${p.year}</td>
     <td><span class="pill ${sc}">${p.status}</span></td>
-    <td>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div class="impl-bar" style="width:70px;"><div class="impl-fill" style="width:${p.impl_pct}%;background:${col}"></div></div>
-        <span style="font-size:12px;font-weight:600;">${p.impl_pct}%</span>
-      </div>
-    </td>
-    <td style="font-size:12px;color:var(--ink-mid);max-width:180px;">${p.gap}</td>
-    <td style="font-size:12px;color:var(--green-dk);max-width:180px;">${p.advocacy}</td>
-    <td>${doc}</td>
+    <td><div style="display:flex;align-items:center;gap:6px;"><div class="impl-bar" style="width:70px;"><div class="impl-fill" style="width:${p.impl_pct}%;background:${col}"></div></div><span style="font-size:13px;font-weight:700;">${p.impl_pct}%</span></div></td>
+    <td style="font-size:13px;color:var(--ink-mid);max-width:180px;">${p.gap}</td>
+    <td style="font-size:13px;color:var(--green-dk);max-width:180px;">${p.advocacy}</td>
+    <td>${p.doc_url?`<a class="doc-link" href="${p.doc_url}" target="_blank">⬇</a>`:'—'}</td>
   </tr>`;
 });
 
-// ── ADVOCACY TABLE ──
+// Advocacy table
 document.getElementById('adv-count').textContent = `${C.advocacy_issues.length} priorities`;
 const ab = document.getElementById('advocacy-tbody');
-C.advocacy_issues.forEach((a,i) => {
-  const sc = 'pill-' + a.status.toLowerCase().replace(/\s+/g,'');
+C.advocacy_issues.forEach(a => {
+  const sc = 'pill-'+a.status.toLowerCase().replace(/\s+/g,'');
   ab.innerHTML += `<tr>
     <td><span class="priority-badge priority-${a.priority}">${a.priority}</span></td>
-    <td><strong>${a.problem}</strong><br><span style="font-size:11px;color:var(--ink-lt);">Partners: ${a.member_orgs?.join(', ')}</span></td>
-    <td style="font-size:12px;">${a.lead_org}</td>
-    <td style="font-size:12px;white-space:nowrap;">${a.timeline}</td>
+    <td><strong style="font-size:14px;">${a.problem}</strong><br><span style="font-size:12px;color:var(--ink-lt);">Partners: ${a.member_orgs?.join(', ')}</span></td>
+    <td style="font-size:13px;">${a.lead_org}</td>
+    <td style="font-size:13px;white-space:nowrap;">${a.timeline}</td>
     <td><span class="pill ${sc}">${a.status}</span></td>
-    <td style="font-size:12px;color:var(--ink-mid);">${a.indicator}</td>
+    <td style="font-size:13px;color:var(--ink-mid);">${a.indicator}</td>
   </tr>`;
 });
 
-// ── UPDATES FEED ──
+// Updates
 const feed = document.getElementById('updates-feed');
-const stored = JSON.parse(localStorage.getItem('updates_' + countyId) || '[]');
-const allUpdates = [...stored, ...C.updates].sort((a,b) => b.date.localeCompare(a.date));
-function renderUpdates(arr) {
-  feed.innerHTML = arr.length ? '' : '<p style="color:var(--ink-lt);font-size:13px;">No updates yet.</p>';
-  arr.forEach(u => {
-    const tags = (u.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-    feed.innerHTML += `<div class="update-item">
-      <div class="update-date">${u.date.slice(0,10)}</div>
-      <div class="update-body">
-        <h4>${u.title}</h4>
-        <p>${u.body}</p>
-        <div class="update-source">Source: ${u.source} &nbsp;${tags}</div>
-      </div>
-    </div>`;
+const storedUpd = JSON.parse(localStorage.getItem('updates_'+countyId)||'[]');
+const allUpd = [...storedUpd,...C.updates].sort((a,b)=>b.date.localeCompare(a.date));
+function renderUpdates(arr){
+  feed.innerHTML = arr.length?'':'<p style="color:var(--ink-lt);font-size:14px;">No updates yet.</p>';
+  arr.forEach(u=>{
+    const tags=(u.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+    feed.innerHTML+=`<div class="update-item"><div class="update-date">${u.date.slice(0,10)}</div><div class="update-body"><h4 style="font-size:15px;">${u.title}</h4><p style="font-size:14px;">${u.body}</p><div class="update-source">Source: ${u.source} &nbsp;${tags}</div></div></div>`;
   });
 }
-renderUpdates(allUpdates);
+renderUpdates(allUpd);
 
-// ── ADD UPDATE ──
-function toggleAddUpdate() {
-  const p = document.getElementById('add-update-panel');
-  p.style.display = p.style.display==='none' ? 'block' : 'none';
-  if(p.style.display==='block') document.getElementById('upd-date').value = new Date().toISOString().slice(0,10);
+function toggleAddUpdate(){
+  const p=document.getElementById('add-update-panel');
+  p.style.display=p.style.display==='none'?'block':'none';
+  if(p.style.display==='block') document.getElementById('upd-date').value=new Date().toISOString().slice(0,10);
 }
-function saveUpdate() {
-  const t = document.getElementById('upd-title').value.trim();
-  const b = document.getElementById('upd-body').value.trim();
-  const d = document.getElementById('upd-date').value;
-  const s = document.getElementById('upd-source').value.trim();
-  const tags = document.getElementById('upd-tags').value.split(',').map(x=>x.trim()).filter(Boolean);
-  if(!t||!b){ alert('Please fill in at least a title and description.'); return; }
-  const entry = {id:`${countyId}-upd-${Date.now()}`, date:d, title:t, body:b, source:s||'Field Team', tags};
-  const stored = JSON.parse(localStorage.getItem('updates_'+countyId)||'[]');
+function saveUpdate(){
+  const t=document.getElementById('upd-title').value.trim();
+  const b=document.getElementById('upd-body').value.trim();
+  const d=document.getElementById('upd-date').value;
+  const s=document.getElementById('upd-source').value.trim();
+  const tags=document.getElementById('upd-tags').value.split(',').map(x=>x.trim()).filter(Boolean);
+  if(!t||!b){alert('Please fill in a title and description.');return;}
+  const entry={id:`${countyId}-upd-${Date.now()}`,date:d,title:t,body:b,source:s||'Field Team',tags};
+  const stored=JSON.parse(localStorage.getItem('updates_'+countyId)||'[]');
   stored.unshift(entry);
-  localStorage.setItem('updates_'+countyId, JSON.stringify(stored));
+  localStorage.setItem('updates_'+countyId,JSON.stringify(stored));
   renderUpdates([...stored,...C.updates].sort((a,b)=>b.date.localeCompare(a.date)));
-  document.getElementById('json-output').style.display = 'block';
-  document.getElementById('json-preview').textContent = JSON.stringify(entry, null, 2);
-  ['upd-title','upd-body','upd-source','upd-tags'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('json-output').style.display='block';
+  ['upd-title','upd-body','upd-source','upd-tags'].forEach(id=>document.getElementById(id).value='');
 }
 
-// ── KEY STATS SIDEBAR ──
-const ks = document.getElementById('key-stats');
-C.key_stats.forEach(s => {
-  ks.innerHTML += `<div class="side-stat ${s.status||''}">
-    <div><div style="font-size:12px;color:var(--ink-mid);">${s.label}</div>${s.benchmark?`<div class="bm">${s.benchmark}</div>`:''}</div>
-    <div class="val">${s.value}</div>
-  </div>`;
+// Key stats
+const ks=document.getElementById('key-stats');
+C.key_stats.forEach(s=>{ks.innerHTML+=`<div class="side-stat ${s.status||''}"><div><div style="font-size:13px;color:var(--ink-mid);">${s.label}</div>${s.benchmark?`<div class="bm">${s.benchmark}</div>`:''}</div><div class="val">${s.value}</div></div>`;});
+
+// Stakeholders
+const sk=document.getElementById('stakeholders');
+[['government','🏛 Government'],['csos','🤝 Civil Society'],['development_partners','🌍 Dev. Partners'],['community','👥 Community']].forEach(([key,lbl])=>{
+  if(!C.stakeholders[key]?.length)return;
+  sk.innerHTML+=`<div class="stakeholder-group"><h4>${lbl}</h4><div class="stakeholder-tags">${C.stakeholders[key].map(s=>`<span class="stk-tag">${s}</span>`).join('')}</div></div>`;
 });
 
-// ── STAKEHOLDERS ──
-const sk = document.getElementById('stakeholders');
-[['government','🏛 Government'],['csos','🤝 Civil Society'],['development_partners','🌍 Dev. Partners'],['community','👥 Community']].forEach(([key,lbl]) => {
-  if(!C.stakeholders[key]?.length) return;
-  sk.innerHTML += `<div class="stakeholder-group"><h4>${lbl}</h4><div class="stakeholder-tags">${C.stakeholders[key].map(s=>`<span class="stk-tag">${s}</span>`).join('')}</div></div>`;
+// CSO capacity
+document.getElementById('cso-strengths').innerHTML = C.cso_strengths.map(s=>`<div class="cap-item str">${s}</div>`).join('');
+document.getElementById('cso-gaps').innerHTML = C.cso_gaps.map(g=>`<div class="cap-item gap">${g}</div>`).join('');
+document.getElementById('coordination').innerHTML = C.coordination.map(c=>`<div style="font-size:13px;color:var(--ink-mid);padding:3px 0;border-bottom:1px solid var(--rule);">• ${c}</div>`).join('');
+
+// Charts
+new Chart(document.getElementById('budget-chart'),{
+  type:'bar',
+  data:{labels:C.budget_trend.map(b=>b.fy),datasets:[{label:'KShs M',data:C.budget_trend.map(b=>b.allocation_m),backgroundColor:'#1a6e3c',borderRadius:4}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:11}},grid:{color:'#f0f0f0'}},x:{ticks:{font:{size:11}}}}}
 });
-
-// ── CSO CAPACITY ──
-const str = document.getElementById('cso-strengths');
-C.cso_strengths.forEach(s => { str.innerHTML += `<div class="cap-item str">${s}</div>`; });
-const gap = document.getElementById('cso-gaps');
-C.cso_gaps.forEach(g => { gap.innerHTML += `<div class="cap-item gap">${g}</div>`; });
-const coord = document.getElementById('coordination');
-C.coordination.forEach(c => { coord.innerHTML += `<div style="font-size:12px;color:var(--ink-mid);padding:3px 0;border-bottom:1px solid var(--rule);">• ${c}</div>`; });
-
-// ── BUDGET CHART ──
-new Chart(document.getElementById('budget-chart'), {
+new Chart(document.getElementById('impl-chart'),{
   type:'bar',
   data:{
-    labels: C.budget_trend.map(b=>b.fy),
-    datasets:[{label:'KShs M', data:C.budget_trend.map(b=>b.allocation_m), backgroundColor:'#1a6e3c', borderRadius:4}]
+    labels:C.policies.map(p=>p.name.length>22?p.name.slice(0,21)+'…':p.name),
+    datasets:[{label:'%',data:C.policies.map(p=>p.impl_pct),backgroundColor:C.policies.map(p=>p.impl_pct>=60?'#1a6e3c':p.impl_pct>=30?'#e67e22':'#c0392b'),borderRadius:3}]
   },
-  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}},grid:{color:'#f0f0f0'}},x:{ticks:{font:{size:10}}}}}
+  options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'#f0f0f0'}},y:{ticks:{font:{size:11}}}}}
 });
 
-// ── IMPLEMENTATION CHART ──
-new Chart(document.getElementById('impl-chart'), {
-  type:'bar',
-  data:{
-    labels: C.policies.map(p => p.name.length>25 ? p.name.slice(0,24)+'…' : p.name),
-    datasets:[{
-      label:'Implementation %',
-      data: C.policies.map(p=>p.impl_pct),
-      backgroundColor: C.policies.map(p => p.impl_pct>=60?'#1a6e3c':p.impl_pct>=30?'#e67e22':'#c0392b'),
-      borderRadius:3
-    }]
-  },
-  options:{
-    indexAxis:'y',responsive:true,
-    plugins:{legend:{display:false}},
-    scales:{
-      x:{max:100,ticks:{callback:v=>v+'%',font:{size:10}},grid:{color:'#f0f0f0'}},
-      y:{ticks:{font:{size:10}}}
-    }
-  }
-});
-
-// ── DOCS LIST ──
-const dl = document.getElementById('docs-list');
-const hasDocs = C.policies.some(p=>p.doc_url);
-if(hasDocs) {
-  C.policies.filter(p=>p.doc_url).forEach(p => {
-    dl.innerHTML += `<div style="padding:8px 0;border-bottom:1px solid var(--rule);font-size:13px;display:flex;justify-content:space-between;align-items:center;">
-      <span>${p.name}</span>
-      <a class="doc-link" href="${p.doc_url}" target="_blank">⬇ Download</a>
-    </div>`;
-  });
-} else {
-  dl.innerHTML = '<p style="font-size:13px;color:var(--ink-lt);margin-bottom:8px;">No documents uploaded yet for this county. Add document URLs to <code>data/counties.js</code> in the policy <code>doc_url</code> field.</p>';
-}
+// Docs
+const dl=document.getElementById('docs-list');
+const hasDocs=C.policies.some(p=>p.doc_url);
+if(hasDocs){C.policies.filter(p=>p.doc_url).forEach(p=>{dl.innerHTML+=`<div style="padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px;display:flex;justify-content:space-between;align-items:center;"><span>${p.name}</span><a class="doc-link" href="${p.doc_url}" target="_blank">⬇ Download</a></div>`;}); }
+else{dl.innerHTML='<p style="font-size:14px;color:var(--ink-lt);">No documents attached yet. Use Admin Panel to add document links.</p>';}
 </script>
 </body>
 </html>

@@ -219,3 +219,52 @@ window.COUNTIES = [
     ]
   }
 ];
+
+// ── GOOGLE SHEETS LIVE DATA LOADER ──
+// Called automatically on page load if Google Sheets is configured in Admin Panel
+window.loadGoogleSheetsData = async function() {
+  const conf = JSON.parse(localStorage.getItem('gs_config') || '{}');
+  if (!conf.connected || !conf.policies) return;
+
+  try {
+    // Load policy overrides from Google Sheet
+    const res = await fetch(conf.policies);
+    const text = await res.text();
+    const rows = text.trim().split('\n').slice(1); // skip header
+    rows.forEach(row => {
+      const [county_id, policy_id, status, impl_pct, gap, doc_url] = row.split(',').map(s => s.trim().replace(/^"|"$/g,''));
+      if (!county_id || !policy_id) return;
+      const stored = JSON.parse(localStorage.getItem('admin_' + county_id) || '{}');
+      if (!stored.policies) stored.policies = [];
+      const existing = stored.policies.find(p => p.id === policy_id);
+      const update = { id: policy_id, status, impl_pct: parseInt(impl_pct) || 0, gap: gap || '', doc_url: doc_url || '' };
+      if (existing) Object.assign(existing, update);
+      else stored.policies.push(update);
+      localStorage.setItem('admin_' + county_id, JSON.stringify(stored));
+    });
+
+    // Load updates from Google Sheet if configured
+    if (conf.updates) {
+      const res2 = await fetch(conf.updates);
+      const text2 = await res2.text();
+      const rows2 = text2.trim().split('\n').slice(1);
+      rows2.forEach(row => {
+        const [county_id, date, title, body, source, tags] = row.split(',').map(s => s.trim().replace(/^"|"$/g,''));
+        if (!county_id || !title) return;
+        const key = 'updates_' + county_id;
+        const stored = JSON.parse(localStorage.getItem(key) || '[]');
+        const id = `gs-${county_id}-${date}-${title.slice(0,10).replace(/\s/g,'')}`;
+        if (!stored.find(u => u.id === id)) {
+          stored.unshift({ id, date, title, body, source, tags: tags ? tags.split(';') : [] });
+          localStorage.setItem(key, JSON.stringify(stored));
+        }
+      });
+    }
+    console.log('Google Sheets data loaded successfully');
+  } catch(e) {
+    console.warn('Google Sheets load failed:', e.message);
+  }
+};
+
+// Auto-load on page init
+window.loadGoogleSheetsData();

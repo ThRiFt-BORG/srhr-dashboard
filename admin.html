@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel — EACHRights SRHR Portal</title>
+<link rel="stylesheet" href="css/base.css">
+<style>
+.admin-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 54px);}
+.admin-nav{background:var(--sidebar);padding:24px 0;}
+.admin-nav h3{color:rgba(255,255,255,.4);font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:0 20px;margin-bottom:8px;margin-top:16px;}
+.admin-nav h3:first-child{margin-top:0;}
+.admin-nav a{display:block;padding:9px 20px;color:rgba(255,255,255,.7);font-size:14px;text-decoration:none;border-left:3px solid transparent;transition:all .15s;}
+.admin-nav a:hover,.admin-nav a.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--gold);}
+.admin-content{padding:32px 40px;background:var(--paper);}
+.admin-section{display:none;}
+.admin-section.active{display:block;}
+.admin-card{background:var(--white);border-radius:8px;box-shadow:var(--shadow);padding:24px;margin-bottom:24px;}
+.admin-card h2{font-size:17px;font-weight:700;color:var(--green-dk);margin-bottom:4px;}
+.admin-card .sub{font-size:13px;color:var(--ink-lt);margin-bottom:20px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.field-row.triple{grid-template-columns:1fr 1fr 1fr;}
+.field-row.full{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:12px;font-weight:700;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.06em;}
+.field input,.field select,.field textarea{border:1px solid var(--rule);border-radius:4px;padding:9px 12px;font-size:14px;font-family:inherit;background:var(--white);color:var(--ink);}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--green);border-color:var(--green);}
+.field textarea{resize:vertical;min-height:90px;}
+.range-wrap{display:flex;align-items:center;gap:12px;}
+.range-wrap input[type=range]{flex:1;accent-color:var(--green);}
+.range-val{font-size:18px;font-weight:700;color:var(--green);min-width:44px;}
+.policy-edit-row{background:var(--paper);border-radius:6px;padding:16px;margin-bottom:12px;border-left:4px solid var(--rule);}
+.policy-edit-row.has-change{border-left-color:var(--gold);}
+.policy-edit-row h4{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--ink);}
+.btn-save{background:var(--green);color:#fff;border:none;padding:10px 24px;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-save:hover{background:var(--green-dk);}
+.btn-danger{background:var(--red);color:#fff;border:none;padding:8px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 20px;border-radius:6px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.show{opacity:1;}
+.login-wrap{max-width:380px;margin:80px auto;background:var(--white);border-radius:10px;box-shadow:var(--shadow);padding:36px;}
+.login-wrap h2{font-size:20px;font-weight:700;color:var(--green-dk);margin-bottom:4px;}
+.login-wrap p{font-size:13px;color:var(--ink-lt);margin-bottom:24px;}
+.gs-info{background:var(--gold-lt);border:1px solid var(--gold);border-radius:6px;padding:16px;margin-bottom:20px;font-size:13px;line-height:1.7;}
+.gs-info strong{color:var(--green-dk);}
+.gs-info code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px;font-size:12px;}
+.gs-step{display:flex;gap:12px;margin-bottom:10px;}
+.gs-step .num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.status-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--red);}
+.status-dot.connected{background:var(--green);}
+.county-tab-bar{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.county-tab{padding:7px 16px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--rule);background:var(--white);color:var(--ink-mid);}
+.county-tab.active{background:var(--green);color:#fff;border-color:var(--green);}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-brand" onclick="window.location='index.html'">
+    <div class="logo-dot">ER</div>
+    <span>EACHRights SRHR Portal</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">← Back to Portal</a>
+  </div>
+  <div class="nav-right">Admin Panel</div>
+</nav>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <h2>🔐 Admin Login</h2>
+    <p>Enter the admin password to access the data management panel.</p>
+    <div class="field" style="margin-bottom:16px;">
+      <label>Password</label>
+      <input type="password" id="admin-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-save" onclick="doLogin()" style="width:100%;">Login</button>
+    <p style="font-size:12px;color:var(--ink-lt);margin-top:14px;text-align:center;">Default password: <strong>eachrights2026</strong><br>Change it in the Settings tab after login.</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none;">
+<div class="admin-layout">
+
+  <!-- SIDEBAR NAV -->
+  <div class="admin-nav">
+    <h3>Data</h3>
+    <a href="#" class="active" onclick="showSection('policies')">📋 Policy Status</a>
+    <a href="#" onclick="showSection('updates')">📰 Add Updates</a>
+    <a href="#" onclick="showSection('documents')">📎 Documents</a>
+    <h3>Integration</h3>
+    <a href="#" onclick="showSection('sheets')">📊 Google Sheets</a>
+    <h3>System</h3>
+    <a href="#" onclick="showSection('settings')">⚙ Settings</a>
+    <a href="#" onclick="showSection('export')">⬇ Export Data</a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="admin-content">
+
+    <!-- POLICIES -->
+    <div class="admin-section active" id="section-policies">
+      <div class="admin-card">
+        <h2>Update Policy Status</h2>
+        <div class="sub">Change the implementation percentage and status of any county policy. Changes are saved immediately and visible on the county page.</div>
+        <div class="county-tab-bar" id="policy-county-tabs"></div>
+        <div id="policy-editor"></div>
+        <button class="btn-save" onclick="savePolicies()">💾 Save All Changes</button>
+      </div>
+    </div>
+
+    <!-- UPDATES -->
+    <div class="admin-section" id="section-updates">
+      <div class="admin-card">
+        <h2>Add Advocacy Update</h2>
+        <div class="sub">Add a new field update or report to a county's timeline.</div>
+        <div class="field-row">
+          <div class="field"><label>County</label>
+            <select id="upd-county"></select>
+          </div>
+          <div class="field"><label>Date</label><input type="date" id="upd-date"></div>
+        </div>
+        <div class="field-row full"><div class="field"><label>Title</label><input type="text" id="upd-title" placeholder="Brief title for the update"></div></div>
+        <div class="field-row full"><div class="field"><label>Description</label><textarea id="upd-body" placeholder="What happened? Decisions made, next steps..."></textarea></div></div>
+        <div class="field-row">
+          <div class="field"><label>Source / Organization</label><input type="text" id="upd-source" placeholder="e.g. EACHRights Field Team"></div>
+          <div class="field"><label>Tags (comma-separated)</label><input type="text" id="upd-tags" placeholder="policy, sgbv, meeting"></div>
+        </div>
+        <button class="btn-save" onclick="saveUpdate()">💾 Save Update</button>
+      </div>
+      <div class="admin-card">
+        <h2>Recent Updates</h2>
+        <div class="sub">Updates saved via admin panel (stored locally).</div>
+        <div id="recent-updates-list"></div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="admin-section" id="section-documents">
+      <div class="admin-card">
+        <h2>Attach Policy Documents</h2>
+        <div class="sub">Link a document URL to a policy so a download button appears on the county page. Host your PDFs on Google Drive, Dropbox, or in the <code>docs/</code> folder.</div>
+        <div class="field-row">
+          <div class="field"><label>County</label><select id="doc-county" onchange="loadDocPolicies()"></select></div>
+          <div class="field"><label>Policy</label><select id="doc-policy"></select></div>
+        </div>
+        <div class="field-row full"><div class="field"><label>Document URL</label><input type="url" id="doc-url" placeholder="https://drive.google.com/... or docs/filename.pdf"></div></div>
+        <button class="btn-save" onclick="saveDocUrl()">💾 Save Document Link</button>
+      </div>
+      <div class="admin-card">
+        <h2>How to host documents free</h2>
+        <div class="sub">Options for making PDFs accessible:</div>
+        <div class="gs-step"><div class="num">1</div><div><strong>Google Drive:</strong> Upload PDF → right-click → Share → Anyone with link → Copy link. Paste that URL above.</div></div>
+        <div class="gs-step"><div class="num">2</div><div><strong>GitHub:</strong> Place PDF in the <code>docs/</code> folder → push to GitHub → use the raw GitHub URL: <code>https://raw.githubusercontent.com/ThRiFt-BORG/srhr-dashboard/main/docs/filename.pdf</code></div></div>
+        <div class="gs-step"><div class="num">3</div><div><strong>Dropbox:</strong> Share link → change <code>?dl=0</code> to <code>?dl=1</code> at end of URL for direct download.</div></div>
+      </div>
+    </div>
+
+    <!-- GOOGLE SHEETS -->
+    <div class="admin-section" id="section-sheets">
+      <div class="admin-card">
+        <h2>📊 Google Sheets Integration</h2>
+        <div class="sub">Connect a Google Sheet as a live data source so non-technical staff update data in a familiar spreadsheet interface.</div>
+
+        <div class="gs-info">
+          <strong>How it works:</strong><br>
+          You publish a Google Sheet as a CSV. The dashboard reads it every time a page loads. Staff update the sheet → portal updates automatically. No coding, no file editing.
+        </div>
+
+        <h3 style="font-size:15px;margin-bottom:14px;color:var(--green-dk);">Setup Steps</h3>
+        <div class="gs-step"><div class="num">1</div><div>Make a copy of the <strong>EACHRights SRHR Data Template</strong> sheet:<br><a href="#" id="sheet-template-link" style="color:var(--green);font-weight:600;">📋 Open Template Sheet →</a><br><span style="font-size:12px;color:var(--ink-lt);">(Template link — paste your Sheet URL below after copying)</span></div></div>
+        <div class="gs-step"><div class="num">2</div><div>In your copy: <strong>File → Share → Publish to web</strong><br>Choose <strong>Sheet: Policies</strong> and format: <strong>CSV</strong> → Click Publish → Copy the URL</div></div>
+        <div class="gs-step"><div class="num">3</div><div>Paste the published CSV URL for each tab below and click Connect.</div></div>
+
+        <div style="margin-top:20px;">
+          <div class="field-row full" style="margin-bottom:12px;">
+            <div class="field">
+              <label>Policies Sheet CSV URL</label>
+              <input type="url" id="gs-policies-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv">
+            </div>
+          </div>
+          <div class="field-row full" style="margin-bottom:12px;">
+            <div class="field">
+              <label>Updates Sheet CSV URL</label>
+              <input type="url" id="gs-updates-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?gid=...&output=csv">
+            </div>
+          </div>
+          <button class="btn-save" onclick="saveSheetConfig()" style="margin-right:10px;">💾 Save & Connect</button>
+          <button class="btn btn-outline" onclick="testSheetConnection()" style="padding:10px 20px;">🔄 Test Connection</button>
+        </div>
+
+        <div style="margin-top:20px;">
+          <div class="status-row"><div class="status-dot" id="gs-status-dot"></div><span id="gs-status-text">Not connected</span></div>
+          <div id="gs-test-result" style="font-size:13px;color:var(--ink-mid);margin-top:8px;"></div>
+        </div>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--rule);">
+          <h3 style="font-size:15px;margin-bottom:10px;color:var(--green-dk);">Google Sheet Column Format</h3>
+          <p style="font-size:13px;color:var(--ink-mid);margin-bottom:10px;">Your <strong>Policies</strong> sheet must have these exact column headers in row 1:</p>
+          <div style="overflow-x:auto;"><table class="policy-table" style="font-size:12px;">
+            <thead><tr><th>county_id</th><th>policy_id</th><th>status</th><th>impl_pct</th><th>gap</th><th>doc_url</th></tr></thead>
+            <tbody><tr><td>homa-bay</td><td>hb-p01</td><td>In Progress</td><td>0</td><td>Delayed finalization</td><td></td></tr>
+            <tr><td>kilifi</td><td>kf-p02</td><td>Not Operational</td><td>0</td><td>Awaiting Governor signature</td><td></td></tr></tbody>
+          </table></div>
+          <p style="font-size:13px;color:var(--ink-mid);margin-top:10px;">Your <strong>Updates</strong> sheet must have: <code>county_id, date, title, body, source, tags</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="admin-section" id="section-settings">
+      <div class="admin-card">
+        <h2>Change Admin Password</h2>
+        <div class="sub">Update the password used to access this admin panel.</div>
+        <div class="field-row">
+          <div class="field"><label>New Password</label><input type="password" id="new-pwd"></div>
+          <div class="field"><label>Confirm Password</label><input type="password" id="confirm-pwd"></div>
+        </div>
+        <button class="btn-save" onclick="changePassword()">Update Password</button>
+      </div>
+      <div class="admin-card">
+        <h2>Clear Local Data</h2>
+        <div class="sub">Remove all locally stored updates and policy overrides (resets to the original data file).</div>
+        <button class="btn-danger" onclick="clearAllData()">⚠ Clear All Local Data</button>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="admin-section" id="section-export">
+      <div class="admin-card">
+        <h2>Export Data</h2>
+        <div class="sub">Download all admin-entered data as JSON to back up or share with your developer.</div>
+        <button class="btn-save" onclick="exportData()">⬇ Download JSON Backup</button>
+        <div id="export-preview" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-layout -->
+</div><!-- /admin-panel -->
+
+<div class="toast" id="toast"></div>
+
+<script src="data/counties.js"></script>
+<script>
+// ── AUTH ──
+const DEFAULT_PWD = 'eachrights2026';
+function doLogin(){
+  const pwd = document.getElementById('admin-password').value;
+  const stored = localStorage.getItem('admin_pwd') || DEFAULT_PWD;
+  if(pwd === stored){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    initAdmin();
+  } else {
+    alert('Incorrect password. Try: eachrights2026');
+  }
+}
+function changePassword(){
+  const np = document.getElementById('new-pwd').value;
+  const cp = document.getElementById('confirm-pwd').value;
+  if(!np){alert('Enter a password.');return;}
+  if(np!==cp){alert('Passwords do not match.');return;}
+  localStorage.setItem('admin_pwd',np);
+  toast('Password updated!');
+}
+
+// ── NAVIGATION ──
+function showSection(id){
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.admin-nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── TOAST ──
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = (type==='success'?'✅ ':'⚠️ ')+msg;
+  t.style.background = type==='success'?'var(--green)':'var(--amber)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ──
+let activePolicyCounty = COUNTIES[0].id;
+function initAdmin(){
+  // Policy county tabs
+  const tabs = document.getElementById('policy-county-tabs');
+  COUNTIES.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'county-tab' + (c.id===activePolicyCounty?' active':'');
+    btn.textContent = c.name;
+    btn.onclick = ()=>{ activePolicyCounty=c.id; document.querySelectorAll('.county-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderPolicyEditor(); };
+    tabs.appendChild(btn);
+  });
+  renderPolicyEditor();
+
+  // Update county select
+  const us = document.getElementById('upd-county');
+  const ds = document.getElementById('doc-county');
+  COUNTIES.forEach(c=>{
+    us.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+    ds.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+  });
+  document.getElementById('upd-date').value = new Date().toISOString().slice(0,10);
+  loadDocPolicies();
+  renderRecentUpdates();
+
+  // Load saved GS config
+  const gsConf = JSON.parse(localStorage.getItem('gs_config')||'{}');
+  if(gsConf.policies) document.getElementById('gs-policies-url').value=gsConf.policies;
+  if(gsConf.updates) document.getElementById('gs-updates-url').value=gsConf.updates;
+  if(gsConf.connected){ document.getElementById('gs-status-dot').classList.add('connected'); document.getElementById('gs-status-text').textContent='Connected'; }
+}
+
+// ── POLICY EDITOR ──
+function renderPolicyEditor(){
+  const C = COUNTIES.find(c=>c.id===activePolicyCounty);
+  const overrides = JSON.parse(localStorage.getItem('admin_'+activePolicyCounty)||'{}');
+  const editor = document.getElementById('policy-editor');
+  editor.innerHTML = '';
+  C.policies.forEach(p=>{
+    const ov = overrides.policies?.find(x=>x.id===p.id)||{};
+    const curStatus = ov.status||p.status;
+    const curImpl = ov.impl_pct!==undefined ? ov.impl_pct : p.impl_pct;
+    const curGap = ov.gap||p.gap;
+    const hasChange = Object.keys(ov).length>0;
+    editor.innerHTML += `
+    <div class="policy-edit-row ${hasChange?'has-change':''}" id="row-${p.id}">
+      <h4>${p.name} ${hasChange?'<span style="background:var(--gold);color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:6px;">EDITED</span>':''}</h4>
+      <div class="field-row triple">
+        <div class="field">
+          <label>Status</label>
+          <select id="status-${p.id}">
+            ${['Adopted','Enacted','In Progress','Draft','Stalled','Not Operational','Partially Implemented'].map(s=>`<option value="${s}" ${curStatus===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Implementation %</label>
+          <div class="range-wrap">
+            <input type="range" min="0" max="100" step="5" value="${curImpl}" id="impl-${p.id}" oninput="document.getElementById('implval-${p.id}').textContent=this.value+'%'">
+            <span class="range-val" id="implval-${p.id}">${curImpl}%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Key Gap</label>
+          <input type="text" id="gap-${p.id}" value="${curGap}">
+        </div>
+      </div>
+    </div>`;
+  });
+}
+
+function savePolicies(){
+  const C = COUNTIES.find(c=>c.id===activePolicyCounty);
+  const overrides = JSON.parse(localStorage.getItem('admin_'+activePolicyCounty)||'{}');
+  overrides.policies = C.policies.map(p=>({
+    id: p.id,
+    status: document.getElementById('status-'+p.id).value,
+    impl_pct: parseInt(document.getElementById('impl-'+p.id).value),
+    gap: document.getElementById('gap-'+p.id).value
+  }));
+  localStorage.setItem('admin_'+activePolicyCounty, JSON.stringify(overrides));
+  toast('Policy data saved for '+C.name+'!');
+  renderPolicyEditor();
+}
+
+// ── UPDATES ──
+function saveUpdate(){
+  const cid = document.getElementById('upd-county').value;
+  const t = document.getElementById('upd-title').value.trim();
+  const b = document.getElementById('upd-body').value.trim();
+  const d = document.getElementById('upd-date').value;
+  const s = document.getElementById('upd-source').value.trim();
+  const tags = document.getElementById('upd-tags').value.split(',').map(x=>x.trim()).filter(Boolean);
+  if(!t||!b){alert('Title and description are required.');return;}
+  const entry = {id:`${cid}-upd-${Date.now()}`,date:d,title:t,body:b,source:s||'EACHRights Admin',tags};
+  const stored = JSON.parse(localStorage.getItem('updates_'+cid)||'[]');
+  stored.unshift(entry);
+  localStorage.setItem('updates_'+cid, JSON.stringify(stored));
+  toast('Update saved for '+COUNTIES.find(c=>c.id===cid).name+'!');
+  ['upd-title','upd-body','upd-source','upd-tags'].forEach(id=>document.getElementById(id).value='');
+  renderRecentUpdates();
+}
+function renderRecentUpdates(){
+  const list = document.getElementById('recent-updates-list');
+  let all=[];
+  COUNTIES.forEach(c=>{
+    const stored=JSON.parse(localStorage.getItem('updates_'+c.id)||'[]');
+    stored.forEach(u=>all.push({...u,countyName:c.name,countyId:c.id}));
+  });
+  all.sort((a,b)=>b.date.localeCompare(a.date));
+  if(!all.length){list.innerHTML='<p style="font-size:14px;color:var(--ink-lt);">No updates added yet.</p>';return;}
+  list.innerHTML=all.slice(0,10).map(u=>`<div class="update-item">
+    <div class="update-date">${u.date.slice(0,10)}<br><span style="font-size:10px;background:var(--green-lt);color:var(--green);padding:1px 5px;border-radius:3px;">${u.countyName}</span></div>
+    <div class="update-body"><h4 style="font-size:14px;">${u.title}</h4><p style="font-size:13px;">${u.body.slice(0,120)}${u.body.length>120?'…':''}</p>
+    <button onclick="deleteUpdate('${u.countyId}','${u.id}')" style="background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;margin-top:4px;">✕ Delete</button>
+    </div></div>`).join('');
+}
+function deleteUpdate(cid,uid){
+  if(!confirm('Delete this update?'))return;
+  const stored=JSON.parse(localStorage.getItem('updates_'+cid)||'[]').filter(u=>u.id!==uid);
+  localStorage.setItem('updates_'+cid,JSON.stringify(stored));
+  renderRecentUpdates();
+  toast('Update deleted.');
+}
+
+// ── DOCUMENTS ──
+function loadDocPolicies(){
+  const cid = document.getElementById('doc-county').value;
+  const C = COUNTIES.find(c=>c.id===cid);
+  const sel = document.getElementById('doc-policy');
+  sel.innerHTML = C.policies.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+function saveDocUrl(){
+  const cid = document.getElementById('doc-county').value;
+  const pid = document.getElementById('doc-policy').value;
+  const url = document.getElementById('doc-url').value.trim();
+  if(!url){alert('Enter a document URL.');return;}
+  const overrides = JSON.parse(localStorage.getItem('admin_'+cid)||'{}');
+  if(!overrides.docUrls) overrides.docUrls={};
+  overrides.docUrls[pid]=url;
+  localStorage.setItem('admin_'+cid,JSON.stringify(overrides));
+  toast('Document link saved!');
+}
+
+// ── GOOGLE SHEETS ──
+function saveSheetConfig(){
+  const pu = document.getElementById('gs-policies-url').value.trim();
+  const uu = document.getElementById('gs-updates-url').value.trim();
+  if(!pu){alert('Enter at least the Policies CSV URL.');return;}
+  localStorage.setItem('gs_config',JSON.stringify({policies:pu,updates:uu,connected:false}));
+  toast('URLs saved. Click Test Connection.','warning');
+}
+async function testSheetConnection(){
+  const conf = JSON.parse(localStorage.getItem('gs_config')||'{}');
+  if(!conf.policies){alert('Save URLs first.');return;}
+  const result = document.getElementById('gs-test-result');
+  result.textContent='Testing...';
+  try {
+    const res = await fetch(conf.policies);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    const rows = text.trim().split('\n');
+    document.getElementById('gs-status-dot').classList.add('connected');
+    document.getElementById('gs-status-text').textContent='Connected ✓';
+    result.textContent=`✅ Success! Found ${rows.length-1} data rows. Headers: ${rows[0]}`;
+    const c = JSON.parse(localStorage.getItem('gs_config')||'{}');
+    c.connected=true;
+    localStorage.setItem('gs_config',JSON.stringify(c));
+    toast('Google Sheets connected!');
+  } catch(e){
+    result.textContent='❌ Connection failed: '+e.message+'. Make sure the sheet is published as CSV and sharing is set to Anyone with link.';
+    toast('Connection failed','warning');
+  }
+}
+
+// ── SETTINGS ──
+function clearAllData(){
+  if(!confirm('This will delete all locally stored updates and policy changes. Are you sure?'))return;
+  COUNTIES.forEach(c=>{
+    localStorage.removeItem('admin_'+c.id);
+    localStorage.removeItem('updates_'+c.id);
+  });
+  toast('All local data cleared.');
+  renderPolicyEditor();
+  renderRecentUpdates();
+}
+
+// ── EXPORT ──
+function exportData(){
+  const out={exported:new Date().toISOString(),counties:{}};
+  COUNTIES.forEach(c=>{
+    out.counties[c.id]={
+      policyOverrides: JSON.parse(localStorage.getItem('admin_'+c.id)||'{}'),
+      updates: JSON.parse(localStorage.getItem('updates_'+c.id)||'[]')
+    };
+  });
+  out.gs_config = JSON.parse(localStorage.getItem('gs_config')||'{}');
+  const blob = new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='srhr-admin-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  document.getElementById('export-preview').innerHTML=`<p style="font-size:13px;color:var(--green);">✅ Downloaded! Share this file with your developer to make changes permanent in <code>data/counties.js</code>.</p>`;
+}
+</script>
+</body>
+</html>
