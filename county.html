@@ -156,12 +156,14 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data/counties.js"></script>
-<script type="module">
+<script>
+(async function() {
 const params = new URLSearchParams(location.search);
 const countyId = params.get('id')||'homa-bay';
 
-// Await sheet data then render — ensures live data always shows
-const C = await window.SHEET_READY.then(() => window.getMergedCounty(countyId));
+// Wait for sheet then get merged county — always falls back to base data
+await window.SHEET_READY;
+const C = window.getMergedCounty(countyId) || window.COUNTIES && JSON.parse(JSON.stringify(COUNTIES.find(c=>c.id===countyId)));
 if(!C){document.body.innerHTML='<p style="padding:40px;">County not found. <a href="index.html">Go home</a></p>';throw 0;}
 
 document.title = `${C.name} County — EACHRights SRHR Portal`;
@@ -293,6 +295,7 @@ const dl=document.getElementById('docs-list');
 const hasDocs=C.policies.some(p=>p.doc_url);
 if(hasDocs){C.policies.filter(p=>p.doc_url).forEach(p=>{dl.innerHTML+=`<div style="padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px;display:flex;justify-content:space-between;align-items:center;"><span>${p.name}</span><a class="doc-link" href="${p.doc_url}" target="_blank">⬇ Download</a></div>`;}); }
 else{dl.innerHTML='<p style="font-size:14px;color:var(--ink-lt);">No documents attached yet. Use Admin Panel to add document links.</p>';}
+})();
 </script>
 </body>
 </html>

@@ -288,8 +288,9 @@ window.loadGoogleSheetsData = async function() {
 
 // Helper: get a county with sheet data merged in (used by county.html)
 window.getMergedCounty = function(countyId) {
-  const base = JSON.parse(JSON.stringify(COUNTIES.find(c => c.id === countyId)));
-  if (!base) return null;
+  const found = COUNTIES.find(c => c.id === countyId);
+  if (!found) return null;
+  const base = JSON.parse(JSON.stringify(found));
 
   // Merge policy overrides from sheet
   const sheetPolicies = window.SHEET_DATA.policies[countyId] || [];
@@ -311,5 +312,7 @@ window.getMergedCounty = function(countyId) {
   return base;
 };
 
-// Auto-load on every page — await before county.html renders
-window.SHEET_READY = window.loadGoogleSheetsData();
+// Auto-load on every page — always resolves even if sheet is unreachable
+window.SHEET_READY = window.loadGoogleSheetsData().catch(() => {
+  console.warn('Sheet unavailable — using base data');
+});
