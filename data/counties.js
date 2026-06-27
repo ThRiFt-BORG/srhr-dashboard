@@ -232,9 +232,16 @@ window.COUNTIES = [
 
 // ── GOOGLE SHEETS LIVE DATA LOADER ──
 // Called automatically on page load if Google Sheets is configured in Admin Panel
+// ── HARDCODED SHEET URLS — works for everyone automatically ──
+const GS_DEFAULTS = {
+  policies: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=0&single=true&output=csv",
+  updates:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=841913399&single=true&output=csv",
+  connected: true
+};
+
 window.loadGoogleSheetsData = async function() {
-  const conf = JSON.parse(localStorage.getItem('gs_config') || '{}');
-  if (!conf.connected || !conf.policies) return;
+  const saved = JSON.parse(localStorage.getItem('gs_config') || '{}');
+  const conf = { ...GS_DEFAULTS, ...saved };
 
   try {
     // Load policy overrides from Google Sheet
