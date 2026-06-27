@@ -230,58 +230,86 @@ window.COUNTIES = [
   }
 ];
 
-// ── GOOGLE SHEETS LIVE DATA LOADER ──
-// Called automatically on page load if Google Sheets is configured in Admin Panel
-// ── HARDCODED SHEET URLS — works for everyone automatically ──
+// ── OPTION A: GOOGLE SHEETS AS SINGLE SOURCE OF TRUTH ──
+// Data is fetched fresh from Google Sheets on every page load.
+// Stored in memory only (window.SHEET_DATA) — no localStorage conflicts.
+// county.html merges sheet data over base COUNTIES data before rendering.
+
 const GS_DEFAULTS = {
   policies: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=0&single=true&output=csv",
-  updates:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=841913399&single=true&output=csv",
-  connected: true
+  updates:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=841913399&single=true&output=csv"
 };
 
-window.loadGoogleSheetsData = async function() {
-  const saved = JSON.parse(localStorage.getItem('gs_config') || '{}');
-  const conf = { ...GS_DEFAULTS, ...saved };
+// In-memory store — reset on every page load, no stale data
+window.SHEET_DATA = { policies: {}, updates: {} };
 
+window.loadGoogleSheetsData = async function() {
   try {
-    // Load policy overrides from Google Sheet
-    const res = await fetch(conf.policies);
+    // ── POLICIES ──
+    const res = await fetch(GS_DEFAULTS.policies);
     const text = await res.text();
-    const rows = text.trim().split('\n').slice(1); // skip header
+    const rows = text.trim().split('\n').slice(1);
     rows.forEach(row => {
-      const [county_id, policy_id, status, impl_pct, gap, doc_url] = row.split(',').map(s => s.trim().replace(/^"|"$/g,''));
+      // Handle commas inside quoted fields
+      const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || row.split(',');
+      const [county_id, policy_id, status, impl_pct, gap, doc_url] = cols.map(s => s.trim().replace(/^"|"$/g,''));
       if (!county_id || !policy_id) return;
-      const stored = JSON.parse(localStorage.getItem('admin_' + county_id) || '{}');
-      if (!stored.policies) stored.policies = [];
-      const existing = stored.policies.find(p => p.id === policy_id);
-      const update = { id: policy_id, status, impl_pct: parseInt(impl_pct) || 0, gap: gap || '', doc_url: doc_url || '' };
-      if (existing) Object.assign(existing, update);
-      else stored.policies.push(update);
-      localStorage.setItem('admin_' + county_id, JSON.stringify(stored));
+      if (!window.SHEET_DATA.policies[county_id]) window.SHEET_DATA.policies[county_id] = [];
+      window.SHEET_DATA.policies[county_id].push({
+        id: policy_id,
+        status: status || '',
+        impl_pct: parseInt(impl_pct) || 0,
+        gap: gap || '',
+        doc_url: doc_url || ''
+      });
     });
 
-    // Load updates from Google Sheet if configured
-    if (conf.updates) {
-      const res2 = await fetch(conf.updates);
-      const text2 = await res2.text();
-      const rows2 = text2.trim().split('\n').slice(1);
-      rows2.forEach(row => {
-        const [county_id, date, title, body, source, tags] = row.split(',').map(s => s.trim().replace(/^"|"$/g,''));
-        if (!county_id || !title) return;
-        const key = 'updates_' + county_id;
-        const stored = JSON.parse(localStorage.getItem(key) || '[]');
-        const id = `gs-${county_id}-${date}-${title.slice(0,10).replace(/\s/g,'')}`;
-        if (!stored.find(u => u.id === id)) {
-          stored.unshift({ id, date, title, body, source, tags: tags ? tags.split(';') : [] });
-          localStorage.setItem(key, JSON.stringify(stored));
-        }
+    // ── UPDATES ──
+    const res2 = await fetch(GS_DEFAULTS.updates);
+    const text2 = await res2.text();
+    const rows2 = text2.trim().split('\n').slice(1);
+    rows2.forEach(row => {
+      const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || row.split(',');
+      const [county_id, date, title, body, source, tags] = cols.map(s => s.trim().replace(/^"|"$/g,''));
+      if (!county_id || !title) return;
+      if (!window.SHEET_DATA.updates[county_id]) window.SHEET_DATA.updates[county_id] = [];
+      window.SHEET_DATA.updates[county_id].push({
+        id: `gs-${county_id}-${date}-${(title||'').slice(0,8).replace(/\s/g,'')}`,
+        date, title, body: body||'', source: source||'',
+        tags: tags ? tags.split(';').map(t=>t.trim()).filter(Boolean) : []
       });
-    }
-    console.log('Google Sheets data loaded successfully');
+    });
+
+    console.log('✅ Google Sheets loaded:', Object.keys(window.SHEET_DATA.policies).length, 'counties with policy data');
   } catch(e) {
-    console.warn('Google Sheets load failed:', e.message);
+    console.warn('⚠️ Google Sheets load failed — using base data:', e.message);
   }
 };
 
-// Auto-load on page init
-window.loadGoogleSheetsData();
+// Helper: get a county with sheet data merged in (used by county.html)
+window.getMergedCounty = function(countyId) {
+  const base = JSON.parse(JSON.stringify(COUNTIES.find(c => c.id === countyId)));
+  if (!base) return null;
+
+  // Merge policy overrides from sheet
+  const sheetPolicies = window.SHEET_DATA.policies[countyId] || [];
+  sheetPolicies.forEach(sp => {
+    const p = base.policies.find(p => p.id === sp.id);
+    if (p) {
+      if (sp.status) p.status = sp.status;
+      if (sp.impl_pct !== undefined) p.impl_pct = sp.impl_pct;
+      if (sp.gap) p.gap = sp.gap;
+      if (sp.doc_url) p.doc_url = sp.doc_url;
+    }
+  });
+
+  // Prepend sheet updates before base updates
+  const sheetUpdates = window.SHEET_DATA.updates[countyId] || [];
+  base.updates = [...sheetUpdates, ...base.updates]
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  return base;
+};
+
+// Auto-load on every page — await before county.html renders
+window.SHEET_READY = window.loadGoogleSheetsData();

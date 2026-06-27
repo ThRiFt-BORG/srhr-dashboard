@@ -104,23 +104,8 @@
     <div class="section" style="padding:0 0 28px;">
       <div class="section-hd"><h2>Updates &amp; Reports</h2><span class="meta">Field reports and advocacy progress</span></div>
       <div id="updates-feed"></div>
-      <button class="update-add-toggle" onclick="toggleAddUpdate()">+ Add New Update</button>
-      <div class="add-update-panel" id="add-update-panel" style="display:none;">
-        <h4>➕ Add Advocacy Update</h4>
-        <div class="form-row">
-          <div class="form-group"><label>Date</label><input type="date" id="upd-date"></div>
-          <div class="form-group"><label>Source / Organization</label><input type="text" id="upd-source" placeholder="e.g. EACHRights Field Team"></div>
-        </div>
-        <div class="form-row full"><div class="form-group"><label>Title</label><input type="text" id="upd-title" placeholder="Brief title"></div></div>
-        <div class="form-row full"><div class="form-group"><label>Description</label><textarea id="upd-body" placeholder="Describe what happened, decisions made, next steps..."></textarea></div></div>
-        <div class="form-row">
-          <div class="form-group"><label>Tags (comma-separated)</label><input type="text" id="upd-tags" placeholder="policy, sgbv, meeting"></div>
-          <div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" onclick="saveUpdate()">Save Update</button></div>
-        </div>
-        <div id="json-output" style="display:none;">
-          <p style="font-size:13px;color:var(--green-dk);margin-bottom:6px;font-weight:600;">✅ Update saved and visible above!</p>
-        </div>
-      </div>
+      <button class="update-add-toggle" onclick="window.open('https://docs.google.com/spreadsheets/d/e/2PACX-1vS-PmarsL1CDHiaanaytyeO1f7iCgUrKWl6TAD-Esc2ZmyRuSd8xKetPXDutVKOkwJe4ldoUyGkLw4w/pub?gid=841913399&single=true&output=csv'.replace('pub?gid','edit#gid'),'_blank')">+ Add Update via Google Sheet</button>
+      <p style="font-size:13px;color:var(--ink-lt);margin-top:6px;">Opens the shared Google Sheet where you can add a new row to the Updates tab. Refresh this page after saving to see the update.</p>
     </div>
 
     <!-- DOCUMENTS -->
@@ -171,26 +156,12 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data/counties.js"></script>
-<script>
+<script type="module">
 const params = new URLSearchParams(location.search);
 const countyId = params.get('id')||'homa-bay';
 
-// Merge localStorage overrides
-function getCounty(id) {
-  const base = JSON.parse(JSON.stringify(COUNTIES.find(c=>c.id===id)));
-  if(!base) return null;
-  const overrides = JSON.parse(localStorage.getItem('admin_'+id)||'{}');
-  if(overrides.policies) {
-    base.policies = base.policies.map(p => {
-      const ov = overrides.policies.find(x=>x.id===p.id);
-      return ov ? {...p,...ov} : p;
-    });
-  }
-  if(overrides.updates) base.updates = [...overrides.updates, ...base.updates];
-  return base;
-}
-
-const C = getCounty(countyId);
+// Await sheet data then render — ensures live data always shows
+const C = await window.SHEET_READY.then(() => window.getMergedCounty(countyId));
 if(!C){document.body.innerHTML='<p style="padding:40px;">County not found. <a href="index.html">Go home</a></p>';throw 0;}
 
 document.title = `${C.name} County — EACHRights SRHR Portal`;
@@ -275,39 +246,16 @@ C.advocacy_issues.forEach(a => {
   </tr>`;
 });
 
-// Updates
+// Updates — from merged county data (sheet + base)
 const feed = document.getElementById('updates-feed');
-const storedUpd = JSON.parse(localStorage.getItem('updates_'+countyId)||'[]');
-const allUpd = [...storedUpd,...C.updates].sort((a,b)=>b.date.localeCompare(a.date));
 function renderUpdates(arr){
-  feed.innerHTML = arr.length?'':'<p style="color:var(--ink-lt);font-size:14px;">No updates yet.</p>';
+  feed.innerHTML = arr.length?'':'<p style="color:var(--ink-lt);font-size:14px;">No updates yet. Add rows to the Google Sheet Updates tab.</p>';
   arr.forEach(u=>{
     const tags=(u.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
     feed.innerHTML+=`<div class="update-item"><div class="update-date">${u.date.slice(0,10)}</div><div class="update-body"><h4 style="font-size:15px;">${u.title}</h4><p style="font-size:14px;">${u.body}</p><div class="update-source">Source: ${u.source} &nbsp;${tags}</div></div></div>`;
   });
 }
-renderUpdates(allUpd);
-
-function toggleAddUpdate(){
-  const p=document.getElementById('add-update-panel');
-  p.style.display=p.style.display==='none'?'block':'none';
-  if(p.style.display==='block') document.getElementById('upd-date').value=new Date().toISOString().slice(0,10);
-}
-function saveUpdate(){
-  const t=document.getElementById('upd-title').value.trim();
-  const b=document.getElementById('upd-body').value.trim();
-  const d=document.getElementById('upd-date').value;
-  const s=document.getElementById('upd-source').value.trim();
-  const tags=document.getElementById('upd-tags').value.split(',').map(x=>x.trim()).filter(Boolean);
-  if(!t||!b){alert('Please fill in a title and description.');return;}
-  const entry={id:`${countyId}-upd-${Date.now()}`,date:d,title:t,body:b,source:s||'Field Team',tags};
-  const stored=JSON.parse(localStorage.getItem('updates_'+countyId)||'[]');
-  stored.unshift(entry);
-  localStorage.setItem('updates_'+countyId,JSON.stringify(stored));
-  renderUpdates([...stored,...C.updates].sort((a,b)=>b.date.localeCompare(a.date)));
-  document.getElementById('json-output').style.display='block';
-  ['upd-title','upd-body','upd-source','upd-tags'].forEach(id=>document.getElementById(id).value='');
-}
+renderUpdates(C.updates);
 
 // Key stats
 const ks=document.getElementById('key-stats');
